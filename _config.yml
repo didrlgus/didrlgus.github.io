@@ -94,9 +94,9 @@ analytics:
 # Site Author
 author:
   name             : "dev-kh"
-  avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
+  avatar           : "/assets/images/photo-1501785888041-af3ef285b470.jpeg"
   bio              : "사용자의 삶의 질을 만족 시켜 주기 위해 끊임없이 노력하는 개발자가 되고싶은 예비 개발자 입니다."
-  location         : "korea"
+  location         : "KOREA"
   email            : "rlgusdid@naver.com"
   links:
     - label: "GitHub"
