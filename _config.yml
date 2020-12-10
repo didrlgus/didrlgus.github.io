@@ -85,7 +85,7 @@ social:
 
 # Analytics
 analytics:
-  provider               : "google"
+  provider               : "google-gtag"
   google:
     tracking_id          : "G-VT5YNR0ZMG"
     anonymize_ip         : # true, false (default)
@@ -95,7 +95,7 @@ analytics:
 author:
   name             : "dev-kh"
   avatar           : "/assets/images/photo-1501785888041-af3ef285b470.jpeg"
-  bio              : "사용자의 삶의 질을 만족 시켜 주기 위해 끊임없이 노력하는 개발자가 되고싶은 예비 개발자 입니다."
+  bio              : "사용자의 삶의 질을 만족 시켜 주는 개발자가 되기 위해 끊임없이 노력중인 예비 개발자 입니다."
   location         : "KOREA"
   email            : "rlgusdid@naver.com"
   links:
