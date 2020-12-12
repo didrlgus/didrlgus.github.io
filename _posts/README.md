@@ -124,6 +124,21 @@
     </div>
 </details>
 
+### Q. 추상클래스와 인터페이스의 차이에 대해 설명해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            추상클래스와 인터페이스의 가장 큰 차이점은 사용용도라고 생각합니다.
+            추상 클래스는 서브 클래스에서 슈퍼 클래스의 기능을 그대로 상속받아 확장시키려는 것이 목적입니다.
+            이에반해, 인터페이스는 결합도가 낮은 코드를 만들어 코드의 유연성과 확장성을 높여 유지보수 비용을 최소화 시키려는 것이 목적입니다.
+            추상클래스는 서브클래스와 슈퍼클래스간의 상속의 관계가 필요한 IS-A 관계이며, 하위 상세 클래스에서 공통된 기능은 그대로 물려받고 별도의 구현이 필요한 부분이 남아있을때 사용하면 되지만, 
+            꼭 필요한 경우를 제외하고 상속은 피하는게 좋은 디자인이라고 생각합니다.
+            상속의 특성상 서브클래스가 슈퍼클래스에 의존하는 관계가 되기 때문에 결합도가 높아 코드의 유연성을 떨어뜨릴 수 있다는 단점이 있기 때문입니다.
+        </p>
+    </div>
+</details>
+
 ### Q. 메서드 오버로딩과 메서드 오버라이딩의 차이에 대해 설명해주세요.
 <details>
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
@@ -306,6 +321,19 @@
             concurrentHashMap은 서로 다른 스레드가 같은 해시 버킷에 접근할 때만 해당 블록이 잠기게 하여 스레드 경합을 최소화 하기 때문에
             hashtable보다 성능이 뛰어납니다.
             그렇기 때문에 thread-safe를 보장하지 않는 환경이라면 hashmap을 thread-safe를 보장해야 하는 환경이라면 concurrentHashmap을 사용하는 것이 적합합니다.
+        </p>
+    </div>
+</details>
+
+### Q. HashMap, TreeMap, LinkedHashMap의 차이에 대해서 말씀해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            HashMap은 내부적으로 Hashing을 사용해 데이터를 저장하고 TreeMap은 Red-Black 트리를 사용해 데이터를 저장합니다.
+            그렇기 때문에 hashmap은 O(1)의 데이터 조회가 가능한데 반해 treemap은 O(logN)의 데이터 조회가 가능합니다.
+            또한, TreeMap은 HashMap과 다르게 데이터 저장 시 데이터의 순서를 보장합니다.
+            그리고 LinkedHashMap도 마찬가지로 HashMap과 다르게 데이터 저장 시 데이터의 순서를 보장합니다.
         </p>
     </div>
 </details>
