@@ -911,3 +911,926 @@
         </p>
     </div>
 </details>
+
+# Database
+
+### Q. INDEX가 뭔가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            테이블의 데이터 조회를 빠르게 하기 위한 기술입니다.
+            조회 성능은 빨라지지만 데이터를 추가하는 성능은 느려집니다.
+            메모리 상에 index가 저장됩니다.
+        </p>
+    </div>
+</details>
+
+### Q. RDB에서 INDEX가 어떻게 구성되어 있나요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            b+트리로 구성되어있습니다.
+            b+트리는 root, branch, leaf 노드로 나뉘고 스스로 균형을 맞추는 트리입니다.
+            스스로 균형을 맞추기 때문에 데이터의 수에 상관없이 O(logN)의 조회성능을 유지합니다.
+        </p>
+    </div>
+</details>
+
+### Q. RDB에서 쿼리가 어떻게 동작하는지 아시나요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            RDB는 크게 connection pool, parser, optimizer, execution egine으로 구성됩니다.
+            먼저, connection pool에서 할당받은 connection으로 client와 연결하여 쿼리를 전달받습니다.
+            전달받은 쿼리는 parser에 의해 잘게 쪼개지는데 이 과정에서 쿼리가 문법적으로 문제가 있는지 없는지 파악합니다.
+            마치 컴파일 단계와 유사한 과정을 수행합니다.
+            다음으로, parsing된 쿼리가 optimizer에 전달되고 optimizer는 인덱스의 유무, 데이터 분산 또는 편향 정도 등의
+            통계정보를 참고하여 여러 실행계획을 작성합니다. 
+            그리고 이들의 비용을 연산한 후, 가장 낮은 비용을 가진 실행계획을 선택합니다.
+            execution engine은 optimizer가 생성한 실행계획을 바탕으로 읽어 들여야 할 데이터가 buffer memory에 
+            있다면 buffer memory의 데이터를 그대로 읽어들입니다. 만약 읽어 들여야 할 데이터가 buffer memory에 없다면 storage에서 직접 데이터를 
+            읽어들이고 buffer memory에 적재시킵니다.
+        </p>
+    </div>
+</details>
+
+### Q. optimizer가 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            optimizer는 인덱스의 유무, 데이터 분산 또는 편향 정도 등의 통계정보를 참고하여 여러 실행계획을 작성하고
+            이들의 비용을 연산한 후, 가장 낮은 비용을 가진 실행계획을 선택하는 DBMS의 핵심엔진 입니다.
+        </p>
+    </div>
+</details>
+
+### Q. index scan과 table full scan이 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            index scan은 index가 적용될 때 테이블을 scan하는 방식이고 table full scan은 index가 적용되지 않았을때 테이블을 scan하는 방식입니다.
+            index scan은 single block I/O로 동작하고, table full scan은 multi block I/O로 동작합니다.
+            데이터가 엄청 많은 상태에서 조회하고자 하는 데이터가 적을 경우에는 index scan이 유리하고 그렇지 않으면 table full scan이 유리합니다.
+            즉, 어느것이 무조건 좋은 방법인 것이 아니라 상황에 따라 특정 방법이 더 좋을 수 있으니 자신의 환경에 맞게 선택하는 것이 중요합니다.
+            (책예시)
+        </p>
+    </div>
+</details>
+
+### Q. hint에 대해 알고계시나요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            옵티마이저가 잘못된 쿼리 플랜을 생성하는 것을 대비해 hint를 사용하여 직접 쿼리 플랜을 제어할 수 있습니다.
+        </p>
+    </div>
+</details>
+
+### Q. 트랜잭션에 대해서 말씀해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            쪼개질 수 없는 작업수행의 논리적 단위를 트랜잭션이라고 합니다.
+            데이터의 정합성을 위해 사용하며 원자성(Atomicity), 일관성(Consistency), 고립성(Isolation), 지속성(Durability)의 4가지 특성을 갖습니다.
+            원자성(Atomicity)은 트랜잭션은 DB에 모두 반영되거나, 전혀 반영되지 않아야 한다는 특성입니다.
+            일관성(Consistency)은 트랜잭션이 성공적으로 수행된 후에도 데이터베이스가 일관성 있는 상태를 유지해야 한다는 특성입니다.
+            고립성(Isolation)은 트랜잭션 수행시 다른 트랜잭션의 작업이 끼어들지 못하도록 보장하는 것을 말합니다.
+            지속성(Durability)은 트랜잭션이 성공적으로 완료되었으면 결과는 영구히 반영되어야 한다는 것을 말합니다.
+            또한 커밋이랑 롤백이라는 개념이 있습니다.
+            커밋은 한 트랜잭션 내의 모든 쿼리가 성공하여 결과값을 디비에 적용하는 것을 말합니다.
+            롤백은 트랜잭션 수행 시 문제가 발생하여 트랜잭션 이전으로 디비 상태를 변경하는 작업을 말합니다.
+        </p>
+    </div>
+</details>
+
+#### Q. Spring @Transactional의 propagation에 대해 말해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            특정 트랜잭션 동작 도중 또다른 트랜잭션을 호출하는 상황에서 기존 트랜잭션을 어떻게 동작시킬 것인지 결정하는 방식입니다.
+            REQUIRED, REQUIRES_NEW, NOT_SUPPORTED 등이 있습니다.
+            REQUIRED는 트랜잭션이 없으면 새로 생성하고, 이미 시작된 트랜잭션이 있으면 해당 트랜잭션을 계속해서 사용하는 옵션입니다.
+            REQUIRES_NEW는 항상 새로운 트랜잭션을 시작하는 옵션입니다. 즉, 이전에 시작되어 실행중인 트랜잭션에 상관없이 항상 새로운 트랜잭션을 만들어 시작시킵니다.
+            NOT_SUPPORTED는 현재 진행중인 트랜잭션이 있어도 사용하지 않습니다. 여러 메서드 동작 시 특정 메서드만 트랜잭션 적용을 제외시킬때 사용됩니다. (이메일 예시)
+        </p>
+    </div>
+</details>
+
+### Q. 트랜잭션의 Isolation level에 대해 말해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            여러 트랜잭션을 순차적으로 수행시킨다면 성능이 매우 안좋을 것입니다.
+            즉, 여러 트랜잭션들을 동시에 수행시키면서 데이터의 정합성을 유지시킬 수 있는 적절한 격리 수준이 필요합니다.
+            이러한 격리 수준으로 READ-UNCOMMITTED, READ-COMMITED, REPEATABLE-READ, SERIALIZABLE 총 4가지 level이 있습니다.
+            READ-UNCOMMITTED는 커밋 전의 트랜잭션의 데이터 변경 내용을 다른 트랜잭션이 읽는 것 허용합니다.
+            여기서는 dirty read, non-repeatable read, panthom read 발생할 수 있습니다.
+            READ-COMMITTED는 커밋이 적용된 데이터만 다른 트랜잭션에서 조회 가능합니다.
+            커밋이 반영되지 않은 데이터에 다른 트랜잭션이 접근할 수 없습니다.
+            여기서는 non-repeatable read와 panthom read가 발생할 수 있습니다.
+            REPEATABLE-READ는 트랜잭션 범위 내에서 조회한 내용이 항상 동일함을 보장합니다.
+            여기서는 panthom read가 발생할 수 있습니다.
+            SERIALIZABLE은 한 트랜잭션에서 사용하는 데이터를 다른 트랜잭션에서 접근 불가합니다.
+            트랜잭션의 ACID 성질이 모두 엄격하게 지켜지는 level이나 성능저하의 문제가 발생합니다.
+        </p>
+    </div>
+</details>
+
+### Q. 샤딩에 대해 설명해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            샤딩이란 대량의 데이터를 분산 처리하기 위해 데이터베이스 테이블을 분할하여 물리적으로 서로 다른곳에 
+            분산하여 저장하는 것을 말합니다.
+            일반적으로 샤딩키를 기준으로 데이터가 분산되며 샤딩키를 잘 지정하여 데이터가 한쪽 샤드로 몰리게 하는것을 막는 것이 중요합니다.
+        </p>
+    </div>
+</details>
+
+### Q. 클러스터링 인덱스, 넌클러스터링 인덱스에 대해 아시나요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            
+        </p>
+    </div>
+</details>
+
+### Q. ElasticSearch의 키워드 검색과 RDB의 %LIKE% 검색의 차이점이 뭘까요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            
+        </p>
+    </div>
+</details>
+
+# 운영체제
+
+### Q. 프로세스와 스레드의 차이에 대해서 말해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            프로세스는 메모리에 올라와 실행되고 있는 프로그램이며 운영체제로부터 시스템 자원을 할당받는 작업의 단위입니다.
+            스레드는 특정 프로세스 내에서 동작되는 여러 실행의 흐름입니다. 스레드는 프로세스로부터 시스템 자원을 할당받습니다.
+        </p>
+    </div>
+</details>
+
+### Q. 멀티 프로세싱, 멀티 스레딩에 대해서 설명하세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            멀티 프로세싱은 두개 이상, 다수의 프로세서(CPU)가 협력적으로 작업을 동시에 처리하는 것을 의미합니다.
+            즉, 여러 개의 프로그램들을 병렬로 처리할 수 있는 것을 말합니다.
+            멀티 프로그래밍은 특정 프로세스 A에 대해서 프로세서가 작업을 처리할때 낭비되는 시간동안 다른 프로세스를 처리하도록 하는 것입니다.
+            즉, 멀티 프로그래밍 은 프로세서의 자원이 낭비되는 것을 최소화하기 위한 것입니다.
+            멀티 태스킹은 다수의 Task를 운영체제의 스케줄링에 의해 번갈아 가면서 수행하는 것입니다.
+            프로세서가 각각의 Task를 조금씩 자주 번갈아가면서 처리하기 때문에 사용자는 마치 동시에 여러 Task가 수행되는 것처럼 보이게 됩니다.
+            즉, 멀티 태스킹은 일정하게 정해진 시간동안 번갈아가면서 각각의 Task를 처리하는 것입니다.
+            멀티 스레딩은 하나의 프로세스를 여러 개의 스레드끼리 공유하는 것을 뜻합니다.
+            멀티 쓰레딩의 장점으로는 자원을 공유하여 메모리에 대한 효율성을 가져올 수 있다는 점이 있습니다.
+        </p>
+    </div>
+</details>
+
+### Q. 데드락이란 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            여러개의 스레드 혹은 프로세스가 하나의 자원을 할당받기위해 무한정 대기하는 상태를 말합니다.
+        </p>
+    </div>
+</details>
+
+### Q. 데드락 발생조건은 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            상호배제(mutual exclusion), 점유 및 대기(hold-and-height), 비선점(no-preemption), 순환대기(circular-wait) 입니다.
+            상호배제는 한번에 한개의 프로세스만이 공유 자원을 사용할 수 있어야 한다는 조건입니다.
+            점유 및 대기는 최소한 하나의 자원을 점유하고 있으면서 다른 프로세스에 할당되어 사용되고 있는 자원을 추가로 점유하기 이해 대기하는 프로세스가 있어야 한다는 조건입니다.
+            비선점은 다른 프로세스에 할당된 자원은 사용이 끝날 때까지 강제로 빼앗을 수 없어야한다는 조건입니다.
+            순환대기는 공유자원과 공유자원을 사용하기 위해 대기하는 프로세스들이 원형으로 구성되어 있어 자신에게 할당된 자원을 점유하면서 앞이나 뒤에 있는 프로세스의 자원을 요구해야 합니다.
+        </p>
+    </div>
+</details>
+
+### Q. 데드락 해결방법은 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            예방, 회피, 탐지와 복구의 방법이 있습니다.
+            예방은 교착상태의 필요조건을 부정함으로써 교착상태가 발생하지 않도록 예방하는 방법입니다.
+            교착상태 발생의 네가지 조건 중에서 어느 하나를 제거함으로써 수행가능합니다.
+            회피는 교착상태 가능성을 배제하지 않고 적절하게 피해나가는 방법입니다.
+            대표적으로 뱅커스 알고리즘이 있습니다.
+            탐지는 교착상태 발견 기법은 시스템에 교착상태가 발생했는지 점검하여 교착상태에 있는 프로세스와 자원을 발견하는 것을 의미합니다.
+            대표적으로 자원 할당 그래프가 있습니다.
+            복구는 교착상태를 일으킨 프로세스를 종료하거나 교착상태의 프로세스에 할당된 자원을 선점하여 프로세스나 자원을 회복하는 것을 의미합니다.
+        </p>
+    </div>
+</details>
+
+### Q. context switch에 대해서 말씀해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            core를 점유하지 못한 프로세스/스레드들이 queue에서 대기하고 있다가 core를 점유하기 위해 core를 점유하고 있던 
+            프로세스/스레드와 core 점유를 바꾸게 되는데 이것을 context switching 이라고 합니다.
+            코어점유가 계속 바뀌니까 스레드수가 코어수보다 많아도 동시에 스레드를 처리 할 수 있습니다.
+            다만, 스레드가 너무 많아지면 context switching도 많아져서 그에 따른 비용 문제가 발생할 수 있습니다.
+        </p>
+    </div>
+</details>
+
+# 네트워크
+
+### Q. 웹이란 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            인터넷에 연결된 컴퓨터를 통해 사람들이 정보를 공유할 수 있는 전 세계적인 정보 공간을 말합니다.
+        </p>
+    </div>
+</details>
+
+### Q. server와 client가 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            한 컴퓨터가 네트워크로 연결된 다른 컴퓨터로 무언가 서비스를 해줄때 서비스를 해주는 주체를 server,
+            서비스를 받는 주체를 client라고 합니다.
+        </p>
+    </div>
+</details>
+
+### Q. API란 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            client/server 간의 통신을 위해 server 쪽에서 정해놓은 약속 입니다.
+            (음식점 주문 예)
+        </p>
+    </div>
+</details>
+
+### Q. URI와 URL의 차이는 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            URI는 네트워크 상의 리소스를 식별하기 위한 문자열 전반을 나타냅니다.
+            URL은 네트워크 상의 구체적인 리소스 위치를 나타냅니다.
+            즉, URL는 URI의 한 형태로, 바꿔 말하면 URI는 URL을 포함 하는 개념입니다.
+            예를들어 https://www.abcd.com/group는 URI 혹은 URL 입니다.
+            https://www.abcd.com/group?groud_id=3는 URI 입니다.
+        </p>
+    </div>
+</details>
+
+### Q. 프로토콜이 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            네트워크 상의 기기가 상호간에 통신하기 위해서는 서로 같은 방법으로 통신해야 합니다.
+            즉, 서로 다른 플랫폼을 가지고 네트워크를 통해 서로 통신하기 위해서는 
+            규칙이 필요하게 되는데 이러한 규칙을 프로토콜이라고 합니다.
+        </p>
+    </div>
+</details>
+
+### Q. http가 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            인터넷상에 존재하는 서버와 클라이언트간에 데이터를 교환하기 위한 프로토콜, 통신규약입니다.
+            HTTP는 TCP/IP 기반으로 한 지점에서 다른 지점(보통 클라이언트와 서버)로 요청과 응답을 전송합니다.
+            HTTP는 먼저 클라이언트가 request를 서버에 보내면, 서버는 클라이언트에게 요청에 맞는 
+            response를 보내고 접속을 끊는 connectionless한 특성이 있습니다.
+            또한, 연결을 끊는 순간 클라이언트와 서버의 통신이 끝나며 상태 정보는 유지하지 않는 stateless한 특성이 있습니다.
+        </p>
+    </div>
+</details>
+
+### Q. 인터넷 상에서 클라이언트/서버의 통신과정에 대해서 말씀해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            1. 클라이언트는 DNS 서버를 통해서 www.naver.com의 IP 주소를 얻습니다.
+            2. 클라이언트는 애플리케이션(HTTP) 계층에서 얻은 IP주소를 목적지로 하여 알맞는 HTTP 요청 메세지를 작성합니다. (이때, HTTP 메서드는 get 방식)
+            3. 클라이언트는 서버와 TCP connection을 만들기 위해 3-way-handshaking 작업을 수행합니다.
+            4. connection이 만들어 지면 클라이언트는 서버에게 HTTP 요청 메세지를 보내는데 해당 메세지는 패킷단위로 쪼개져서 인터넷을 라우팅하며 서버로 전송됩니다.
+            5. 서버는 전송계층(TCP)에서 패킷을 수신하고 조립합니다.
+            6. 서버는 클라이언트의 요청에 맞는 자원이 존재하는지 파악하여 존재한다면 200 상태코드 존재하지 않는다면 
+               404 상태코드를 넣어 HTTP 응답 메세지를 작성합니다.
+            7. 서버는 클라이언트에게 역방향으로 HTTP 응답 메세지를 전송합니다.
+            8. 클라이언트에서 서버의 응답 메세지를 받으면 TCP connection을 끊기위해 4-way-handshaking 작업을 수행하여 connection을 끊습니다.
+            9. 클라이언트는 서버로부터 받은 HTTP 응답 메세지를 브라우저에 띄웁니다.
+        </p>
+    </div>
+</details>
+
+### Q. 쿠키와 세션에 대해서 말씀해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            쿠키와 세션모두 http의 stateless한 한계를 극복하기 위한 기술입니다.
+            쿠키는 클라이언트(브라우저) 로컬에 저장되는 키와 값이 들어있는 작은 데이터 파일입니다.
+            클라이언트 로컬에 저장되기 때문에 변조하거나 request에서 스나이핑당할 우려가 있어서 보안이 취약합니다.
+            만료시간은 있지만 파일로 저장되기 때문에 브라우저를 종료해도 계속해서 정보가 남아 있을수 있습니다.
+            세션이란 서버에 저장하는 상태 정보입니다.
+            세션 아이디는 웹 브라우저 당 1개씩 생성되며 서버내에 저장됩니다.
+            세션은 만료기간을 정할수는 있지만 브라우저가 종료되면 그에 상관없이 삭제됩니다.
+            쿠키를 이용해서 세션id만 로컬에 저장하고 그것으로 구분해서 서버에서 처리하기 때문에 
+            쿠키보다는 비교적 안전합니다.
+            (쿠키/세션 동작방식 그림설명)
+        </p>
+    </div>
+</details>
+
+### Q. TCP/IP에 대해 설명해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            인터넷과 관련된 프로토콜을 모은 집합입니다.
+            애플리케이션, 트랜스포트, 데이터링크, 링크 계층 이렇게 4계층으로 나뉘어져 있습니다.
+            애플리케이션 계층은 유저에게 제공되는 애플리케이션에서 사용하는 통신의 움직임을 결정합니다. FTP, DNS, HTTP 등이 여기 포함됩니다.
+            트랜스포트 계층은 애플리케이션 계층에 네트워크로 접속되어 있는 2대의 컴퓨터 사이의 데이터 흐름을 제공합니다.
+            여기에는 TCP가 있습니다.
+            네트워크 계층은 네트워크 상에서 패킷의 이동을 다룹니다.
+            여기서 패킷이란 전송하는 데이터의 최소단위를 말합니다.
+            그리고 어떠한 경로를 라우팅(택배와 비슷)하여 상대의 컴퓨터까지 패킷을 보낼지 결정합니다.
+            링크 계층은 네트워크에 접속하는 하드웨어적인 면을 다룹니다.
+            디바이스 드라이버와 네트워크 인터페이스 카드(NIC), 케이블 등과 같은 물리적으로 보이는 부분을 포함합니다.
+        </p>
+    </div>
+</details>
+
+### Q. TCP (Transfer Congrol Protocol)에 대해 설명해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            높은 신뢰성을 보장하는 연결형 프로토콜 입니다.
+            트랜스포트 계층에 해당하며, 인터넷에서 사용되는 프로토콜 입니다.
+            3way,4way handshaking을 통해 client/server 간 연결을 생성하고 종료합니다. (그림설명)
+            데이터의 흐름 제어 및 혼잡 제어를 담당합니다.
+            흐름제어는 데이터를 송신하는 곳과 수신하는 곳의 데이터 처리 속도를 조절하여 수신자의 버퍼 오버플로우를 방지하는 것입니다.
+            혼잡제어는 네트워크 내의 패킷 수가 넘치지 않도록 방지하는 것입니다.
+        </p>
+    </div>
+</details>
+
+### Q. UDP (User Datagram Protocol)에 대해 설명해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            TCP와 달리 비연결형 프로토콜입니다. 트랜스포트 계층에 해당합니다.
+            신뢰성이 낮지만 TCP보다 속도가 빠릅니다.
+            스트리밍 서비스 환경에 유리합니다.
+        </p>
+    </div>
+</details>
+
+### Q. Rest API에 대해 설명해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            REST는 Representational State Transfer라는 용어의 약자로서 소프트웨어 프로그램 개발 아키텍처의 한 형식입니다.
+            REST는 URI로 잘 표현된 리소스에 대한 행위를 HTTP Method로 정의하는 방식
+            rest의 구성 요소로는 자원 (Resource), 행위 (Verb), 표현 (Representations)이 있습니다.
+            REST API는 REST 라는 형식의 API 입니다.
+            REST가 필요한 이유는 각 요청이 어떤 리소스에 어떤 동작을 위한 것인지 그 요청의 모습 그자체로 추론이 가능하기 때문에 협업에 용이합니다.
+            그리고 다양한 클라이언트가 등장함에따라 Backend 하나로 다양한 Device를 대응하기 위해 REST가 더욱 더 필요하게 되었습니다.
+            RESTful이란 REST 원리를 잘 따르는 시스템을 RESTful이란 용어로 지칭합니다.       
+        </p>
+    </div>
+</details>
+
+### Q. REST의 행위는 http의 어떤 메서드와 매칭되나요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            자원에 대한 조회는 GET, 수정은 PUT, 삭제는 DELETE로 표현합니다. 또한 특정 자원의 추가는 POST로 표현합니다.
+            이때 멱등성이라는 개념이 적용되는데, 멱등성은 같은 연산을 여러번 적용하더라도 결과가 달라지지 않는 성질을 말합니다.
+            GET, PUT, DELETE는 같은 조건으로 연산을 여러번 적용해도 결과가 변하지 않기 때문에 멱등성을 가집니다.
+            그러나 POST는 연산을 적용할때마다 결과가 변하기 때문에 멱등성을 갖지 않습니다. 
+        </p>
+    </div>
+</details>
+
+### Q. sync, async, blocking I/O, non blocking I/O에 대해서 설명해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            
+        </p>
+    </div>
+</details>
+
+### Q. latency, bandwidth에 대해서 설명해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            latency는 요청이 처리되길 기다리는 시간을 의미하며 ms 단위를 사용합니다.
+            bandwidth는 네트워크나 데이터 전송 매체의 데이터 운반 능력을 말하며 단위 시간동안 한 지점에서 다른 지점으로 
+            전달될 수 있는 최대 데이터 양을 의미합니다. bps 단위를 사용합니다.
+        </p>
+    </div>
+</details>
+
+### Q. https가 무엇이며 어떻게 동작하나요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            https는 http의 보안문제를 보완하기 위해 나온 프로토콜입니다.
+            먼저, client는 임의의 랜덤값을 생성해 server로 보내줍니다.
+            다음으로, server는 임의의 랜덤값을 생성해 CA의 개인키로 암호화돼있는 인증서와 함께 client에게 응답합니다.
+            다음으로, clienet는 server로 부터 받은 인증서를 브라우저에 내장돼있는 CA의 공개키로 복호화 하여 server의 공개키를 얻습니다.
+            다음으로, client는 자신이 생성했던 랜덤값과 서버로 부터 응답받은 랜덤값을 조합해 새로운 대칭키를 만듭니다.
+            다음으로, client는 새로 만든 대칭키를 server의 공개키로 암호화하여 server에게 보내줍니다.
+            다음으로, server는 자신의 개인키로 client로 부터 받은 암호문을 복호화하여 대칭키를 얻습니다.
+            다음으로, client는 http 메세지를 새로만든 대칭키로 암호화 하여 server에게 보내줍니다.
+            마지막으로, server는 암호화된 http 메세지를 client로 부터 받은 대칭키로 복호화하여 http 메세지를 얻고 연결을 종료합니다.
+        </p>
+    </div>
+</details>
+
+### Q. keepAlive에 대해 설명해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            TCP 연결을 끊지않고 유지시켜 재사용하는 기법입니다.
+            즉, Handshake 과정이 생략되므로 성능 향상을 기대 할 수 있습니다.
+            그러나 요청이 많은 서버 환경에서 Keep Alive 기능을 사용할 경우 모든 요청 마다 연결을 유지해야 하기 때문에
+            오히려 connection을 유지하는데 드는 비용이 커져 성능이 하락할 수 있습니다.
+            ex) timeout=5, max=100 - 하나의 연결을 5초 동안 유지. 최대 100개의 connection 까지 허용
+        </p>
+    </div>
+</details>
+
+# 보안
+### 대칭키와 공개키,개인키가 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            대칭키는 암호화와 복호화 하는데 동일하게 사용되는 키입니다.
+            다만, 대칭키는 해커가 가로채면 문제가 발생합니다.
+            공개키(비대칭키)는 공개키로 암호화 한 암호문은 개인키로 복호화 하고 개인키로 암호화한 암호문은 
+            공개키로 복호화 하는 기법입니다.
+        </p>
+    </div>
+</details>
+
+### CORS가 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            CORS는 SOP로 인해 발생하는 불편함을 해소하기 위해 서로 다른 도메인간의 요청과 응답을 허용하는 것입니다.
+            SOP(Same Origin Policy)란 브라우저가 스크립트에서 시작한 서로 다른 출처의 HTTP 요청을 제한하는 정책입니다.
+            동일 출처라는 것은 Protocol, Host, Port가 같다는 것을 의미합니다.
+            기존에는 하나의 출처/도메인에서 비즈니스로직을 처리하고 html을 렌더링하는 작업을 같이 하는것이 일반적이었다.
+            그래서 SOP에 위배되지 않았습니다.
+            하지만, 최근에는 frontend와 API서버간 서로 다른 도메인을 사용하는 상황이 늘었습니다.
+            그래서 SOP때문에 불편한점들이 생기기 시작했습니다.
+            이러한 불편함을 해결하기 위해 나온 기법이 CORS (Cross Origin Resource Sharing) 입니다.
+        </p>
+    </div>
+</details>
+
+### XSS가 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            client가 조회하는 웹페이지에 악성 script를 심어놓아 client의 쿠키/세션 정보를 탈취하는 해킹기법입니다.
+            client를 노리는 기법입니다.
+            XSS 필터를 통해 예방할 수 있습니다.
+        </p>
+    </div>
+</details>
+
+### CSRF가 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            client의 의도와는 무관하게 해당 client가 의도치 않은 요청을 server로 보내도록 하는 해킹기법입니다.
+            server를 노리는 기법입니다.
+            예를들어, 해커가 특정 웹사이트의 관리자에게 관리자의 비밀번호를 수정하는 URL을 심어놓은 메일을 전송합니다.
+            웹사이트의 관리자는 의심없이 해당 메일을 열어보고 자기도 모르게 비밀번호를 수정하는 URL을 server로
+            요청합니다. 이 과정에서 발생하는 해킹이 CSRF 입니다.
+            서버로부터 CSRF 토큰을 client에게 발급해준 후, client는 DB 상태를 변경시킬 수 있는 POST, PUT, DELETE 요청 시 http 헤더에
+            CSRF 토큰을 넣고, 그 토큰을 서버에서 검증함으로서 예방할 수 있습니다.
+        </p>
+    </div>
+</details>
+
+### SQL Injection이 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            client가 요청으로 보낸 파라미터가 DB 쿼리에 이용되도록하여 쿼리를 조작하는 해킹기법입니다.
+            JDBC preparedstatement를 사용하던가 JPA에서 native query를 이용할 때 parameter 바인딩을 하면 예방가능 합니다.
+        </p>
+    </div>
+</details>
+
+### 해시함수가 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            해시 함수란 데이터의 효율적 관리를 목적으로 임의의 길이의 데이터를 고정된 길이의 데이터로 매핑하는 함수입니다.
+            매핑 전 데이터 값을 key, 매핑 후 데이터 값을 hash value라 하고, 매핑하는 과정을 해싱이라고 합니다.
+            또한 저장된 데이터의 양에 상관없이 데이터 하나를 저장하고 검색하는 것을 상수시간에 처리 하기위한 기법을 해시 테이블이라고 합니다.
+            해시를 사용하면 데이터 조회, 추가 시 O(1) 성능을 보장받을 수 있습니다. 
+            그리고 동일 key에 대한 해시값은 무조건 같습니다.
+            다만, key가 달라도 해시값은 같을 수 있는데 이를 충돌이라고 합니다.
+        </p>
+    </div>
+</details>
+
+# 인프라/클라우드
+
+### 무중단 배포 어떤거 아시나요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            blue-green과 rolling update에 대해 알고 있습니다.
+            blue-green은 서버그룹을 쌍으로 구축하여 LB의 proxy_pass를 업데이트 버전의 서버그룹으로 번갈아가며 배포하는 방식
+            이전 버전으로의 rollback이 쉽다는 장점이 있습니다.
+            하지만 서버 구축 비용이 많이 든다는 단점이 있습니다.
+            rolling-updates는 기존에 운영하던 서버를 하나씩 중단시키고 버전 업데이트 후 다시 배포하는 방식
+            추가적인 서버 구축 비용이 없다는 장점이 있습니다.
+            하지만 업데이트 시점에 배포되어있는 서버가 줄어들어 부하가 몰릴 수 있으며 버그 발생 시 이전 버전으로의 rollback이 어렵습니다.
+            또한, 동일한 시점에 여러 버전이 공존할 수 있어 응답 결과가 요청마다 달라질 수 있습니다.
+        </p>
+    </div>
+</details>
+
+# 프로젝트
+
+### 프로젝트 설명해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            개인적으로 스프링 부트를 이용해 쇼핑몰 서비스를 제공하는 프로젝트를 개발하였습니다. 
+            또한,서비스를 개발하는 것으로 끝내는 것이 아니라 내가 만든 서비스에 대해 어떻게 하면 성능과 안정성을
+            더 높일 수 있을 지에 대해 주도적으로 고민하였습니다. 결과적으로, 스프링 단일 서버 기준 약 900tps 까지 처리
+            하는 서비스를 구축하였고, cloud 환경에서 auto scale out 할 수 있는 architecture를 구축하여 초당 
+            수만 건의 요청도 처리할 수 있는 환경을 구축했습니다. 
+            또한 테스팅 환경을 실시간으로 모니터링 할 수 있는 환경을 구축했으며, 
+            서비스 내에서 발생하는 Log들을 실시간 모니터링 할 수 있는 환경을 구축했습니다.
+        </p>
+    </div>
+</details>
+
+### java, spring을 선택한 이유가 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            java는 객체 지향 언어이기 때문에 설계를 잘하면 유지보수가 쉽고 확장성이 좋습니다.
+            또한, 메모리 관리를 개발자가 직접 하지 않고 GC를 
+            이용하므로 메모리를 효율적으로 관리할 수 있으며, 내가 개발하고자 하는 기능에 집중할 수 있었습니다.
+            또한 spring은 개발자가 자바 엔터프라이즈 개발을 수월하게 할 수 있도록 도와주기 때문에 spring을 선택했습니다.
+            그리고 spring은 기본적으로 IOC/DI, AOP, PSA 등을 지원하여 코드를 유연하고 확장성 있게 개발할 수 있도록 도와주고,
+            개발자가 자신의 비즈니스 로직에만 집중하여 생산성을 높일 수 있도록 도와주기 때문에 사용했습니다.
+        </p>
+    </div>
+</details>
+
+### 서버가 느리다는 피드백을 받았을 때 어떻게 대처할 것인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            만약 특정 API에서 성능 저하가 발생했다면 해당 API에서 수행하던 쿼리의 실행계획
+            을 파악한 후, index를 적용시키기 좋은 상황이라면 적용시킬 것 같습니다. 만약 이미 index가 적용돼있는 상황이라면 
+            index가 의도한대로 잘 타고있는지 확인한 후 잘 타지 않는다면 index 설계를 다시 할 것 같습니다.
+            또한, 해당 API에서 수행하는 쿼리가 캐싱을 하기 적절하다고 판단되는 쿼리가 있다면 메모리 캐시나 로컬 캐시를 적용해서 성능을 높일 것입니다.
+            또한 만약 대량의 트래픽으로 인해 latency가 갑자기 높아진 상황이라면 서버를 scale out 하여 트래픽을 분산시킬 것입니다.
+        </p>
+    </div>
+</details>
+
+### 서버의 트래픽이 과도하게 많을 때 어떻게 대처할 것인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            캐싱할 수 있는 데이터를 memory db나 local에 캐싱하여 요청들을 빠르게 처리할 것입니다.
+            그래도 트래픽이 과도하게 많다면, 서버를 scale out 시켜 트래픽을 분산시킬 것입니다.
+            그리고 서버의 laytency와 tps를 파악할 수 있는 모니터링 시스템을 구축한 후
+            한대 서버 기준 최대 tps를 파악해 scale out 시켜줘야 할 임계점을 찾을 것입니다.
+            그 후 그 임계점을 초과하면 자동으로 서버를 scale out하는 auto scale out 시스템을 구축할 것입니다.
+        </p>
+    </div>
+</details>
+
+### 프로젝트 하면서 어려웠던 점은 뭐였고 어떻게 해결했나요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <div>
+            <p>첫번째 무기</p>
+            <p>
+                결제 성공 API에서 발생했던 여러 비즈니스 로직들의 coupling 문제를 해결한 경험입니다.
+                먼저, 결제 성공 API에서 수행하는 일련의 작업들이 있었습니다.
+                결제 성공 시 주문서 작성, 장바구니 제거, 적립금 수정, 상품 구매 수량 변경, 결제 성공 메일 전송 작업들을 수행했습니다.
+                그런데, 기존에는 이러한 작업들을 결제 성공 API 내에서 수행하고 있었습니다.
+                이러한 코드는 해당 API가 너무 많은 책임들을 갖고 있었고, 각 작업들의 coupling이 심하다는 문제가 있었습니다.
+                또한, 새로운 작업을 추가할 때마다 계속해서 API내 코드를 추가해야돼서 코드의 유연성과 확장성이 떨어져
+                많은 유지보수 비용을 초래한다는 문제가 있었습니다.
+                그래서 이 문제를 해결하기 위해 kafka를 이용하였고 기존 API는 결제 성공 event를 전송하는 producer로써의 책임만을 부여했습니다.
+                그리고 결제 성공 시 수행하던 각각의 작업들을 consumer로 구현하였습니다.
+                이를 통해 유연하고 확장성있는 architecture를 구축 할 수 있었습니다.
+            </p>
+        </div>
+        <div>
+            <p>두번째 무기</p>
+            <p>
+                상품 구매 카운트 consumer scale out 시 생기는 동시성 문제를 해결한 경험입니다.
+                kafka는 1초에 200개의 메시지를 받을 수 있는데 consumer는 100개의 메시지만 처리할 수 있다고 가정한다면 kafka의 해당 topic에서 LAG이 발생합니다.
+                LAG이 계속해서 진행된다면 추후에 심각한 문제가 발생할 수 있기 때문에 이를 해결해야했습니다.
+                이를 해결하는 방법으로는 consumer를 하나 더 늘려 분산처리하는 방법이 있습니다.
+                하지만, consumer를 하나 더 늘리면 상품 구매 카운트 테이블에서 동시성 문제가 발생했습니다.
+                이 문제를 해결하기 위해 SELECT FOR UPDATE 쿼리를 사용해 해당 row에 lock을 걸었습니다.
+                동시성 문제는 해결했지만, 해당 row에 lock이 걸려 기존에 상품을 조회하는 API 성능에 치명적인 문제가 발생했습니다.
+                이 문제를 해결하기 위해 counting을 수행하는 batch server를 만들어 batch server의 local에 counting 데이터를 저장하고 있다가 특정 주기마다 update 시켜준다면, API 서버의 응답 시간에 주는 영향을 줄일 수 있다고 생각했습니다.
+                하지만, 위의 방법은 batch server에 장애가 발생하면 counting 데이터를 잃어버리게 된다는 또 다른 문제를 발생 시켰습니다.
+                그래서 상품 구매 수량 데이터를 저장하는 product_purchase_count 테이블을 새로 생성하여 별도로 저장했습니다. 
+                이로 인해, 데이터의 정합성 문제도 없으면서, 특정 consumer 에 장애가 발생해도 대처가 가능한 결과를 얻었습니다. 
+                또한, product_purchase_count 테이블의 데이터를 sum하는 배치 job을 생성하여 app server의 API 응답 시간의 영향도 최소화 시켰습니다.
+                하지만, 결제 수가 많아질 수록 product_purchase_count 테이블의 크기가 exponentially 하게 커질 가능성이 있었고, product_purchase_count 테이블이 커질수록 sum batch에서 
+                수행하는 작업에 걸리는 시간이 늘어나는 또 다른 문제가 발생했습니다.
+                그래서 product_purchase_count 테이블에 time column을 추가하여 논리적으로 realtime data, old data를 나누었습니다.
+                그리고 product_purchase_count 테이블이 커질것을 대비해 count 데이터를 집계하는 테이블인 product_purchase_merge_count 테이블을 생성했습니다.
+                또한, realtime data와 old data를 나눌 기준이 되는 time 데이터를 저장할 product_purchase_count_standart_time 테이블을 생성했습니다.
+                그리고 배치에서 product_purchase_count_job을 생성하고 총 3개의 step으로 분리했습니다.
+                sum step 에서는 product_purchase_count 테이블의 new 데이터와 product_purchase_merge_count 테이블의 old 데이터를 합해 product 테이블의 count 데이터를 업데이트 시킵니다.
+                merge step 에서는 product_purchase_count 테이블의 new 데이터를 집계하여 product_purchase_merge_count 테이블에 insert 합니다.
+                delete step 에서는 product_purchase_count 테이블의 old 데이터를 삭제시킵니다.
+                위의 과정들을 통해 결과적으로, 상품 구매 수량 count consumer의 scale-out 상황에서 발생했던 데이터의 정합성 문제와 안정성 문제, 데이터가 많아졌을 때 특정 테이블이 커지는 문제를 해결했습니다. 
+                하지만 현재, 상품 결제 시 실시간으로 상품의 구매 수량 데이터를 업데이트 하지 못한다는 한계를 가지고 있습니다. 
+                어떻게 하면 위의 문제들을 모두 해결하면서 상품 구매 수량 count를 실시간으로 업데이트 시킬지 정확한 답을 아직 찾지는 못했으나, 조사를 통해 대용량 데이터의 실시간 분석이 가능한 lambda architecture에 대해 알게 되어 도입을 고려하고 있습니다.
+            </p>
+        </div>
+        <div>
+            <p>세번째 무기</p>
+            <p>
+                코드 중복, 버전관리, github repository 관리의 어려움을 gradle multi module로 해결한 경험입니다.
+                기존에 각 consumer들을 별도의 모듈로 만들었고, 각자의 github repository를 생성해 배포하고 있었습니다.
+                그래서 각 consumer들마다 공통으로 사용하는 코드 혹은 redis, kafka 관련 코드들의 중복이 발생했고 consumer들이 추가될 때마다 github repository를 관리하기 어려워졌습니다.
+                이를 해결하기위해 gradle multi module을 사용하였고, 이로인해 코드 중복을 최소화 시켰고 확장성도 좋아졌으며, 버전관리가 용이하게 되었고, github repository 관리도 수월해졌습니다.
+            </p>
+        </div>
+        <div>
+            <p>네번째 무기</p>
+            <p>
+                스프링 배치에서 각 스텝을 tasklet으로 구성했을 때 발생했던 문제를 해결한 경험입니다.
+                tasklet으로 구성하면 데이터 조회 시 조건에 맞는 모든 데이터를 읽어들이고 처리합니다.
+                조회할 데이터의 수가 적다면 문제될 것 없겠지만 조회할 데이터의 매우 많다면 한번에 매우 많은 데이터를 
+                메모리상으로 로딩시켜야 할 것이고 이는 서버에 많은 부하를 주게 될 것이다. 최악의 경우 서버가 다운될 우려도
+                있을 것입니다.
+                이를 방지하기 위해 스프링 배치에서는 데이터를 page 단위로 끊어서 읽는 pageItemReader를 제공합니다.
+                이를 통해 안정적으로 batch job을 수행할 수 있는 배치 애플리케이션을 개발했습니다.
+            </p>
+        </div>
+        <div>
+            <p>다섯번째 무기</p>
+            <p>
+                ELK 스택에서 Logstash 장애 시 생기는 문제를 kafka를 이용해 해결한 경험입니다.
+                filebeat에서 로그 데이터를 보냈는데 logstash가 해당 데이터를 받는 도중에 장애가 나는 경우 또는 
+                filebeat에서 로그 데이터를 logstash로 보낸 후 logstash에서 로그 데이터를 parsing하는 도중에 장애가 
+                나버리면 최악의 경우, 데이터의 손실이 발생할 수 있었습니다.
+                왜냐하면, logstash나 filebeat 모두 어디에서도 안정성을 보장해주지 못하기 때문입니다.
+                이를 해결하기 위해, 시스템의 중앙에서 신뢰성을 보장하고 확장성 높으며 높은 성능을 보장해주는 kafka를 연동하여 문제를 해결하였습니다.
+                즉, kafka에 메시지가 없어지기 전에 logstash의 장애를 해결하고 다시 작동시킨다면 데이터 손실을 막을 수 있습니다.
+            </p>
+        </div>
+        <div>
+            <p>여섯번째 무기</p>
+            <p>
+                성능 테스트 시 발생했던 문제를 scale up을 통해 해결한 경험입니다.
+                초기에, 개인 pc에 테스팅 환경을 구축하여 cloud 상에 배포된 애플리케이션의 load test를 진행했습니다.
+                하지만 개인 pc에서 테스트를 진행하다보니 일관성있는 결과를 얻을 수 없다는 문제가 발생했습니다.
+                그래서 클라우드 상에 새로 테스팅 환경을 구축하여 다시 load test를 진행했습니다.
+                하지만, 부하를 많이 주면 줄수록 실패하는 요청이 늘어나는 문제가 발생했습니다.
+                application log를 파악한 결과 thread가 CP로부터 connection을 응답받는 시간이 default로 지정된 시간을 초과하여 생기는 문제였습니다.
+                이 문제를 해결하기 위해 connection pool size를 늘려서 테스트를 진행하였는데 이번에는 메모리 부족으로 인해 서버가 아예 다운되었습니다.
+                AWS 프리티어의 환경으로 애플리케이션을 띄워놓다보니 해당 VM server의 스펙이 너무 낮아 많은 connection 들을 갖고 있을 메모리 공간의 부족이 주요 문제 상황이었습니다.
+                그래서, application을 띄울 서버의 사양을 높였고 이를통해, 메모리 부족 문제를 해결했습니다.
+            </p>
+        </div>
+    </div>
+</details>
+
+### 왜 MQ로 kafka를 선택했나요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            kafka는 메세지를 저장하는 하나의 토픽에 대해 여러 용도로 사용할 수 있기 때문입니다.
+            일반적인 메세지 큐는 특정 컨슈머가 메세지를 소비하면 큐에서 메세지가 삭제되어 다른 컨슈머에서는
+            가져갈 수 없는데, 카프카는 컨슈머가 메세지를 소비해도 해당 메세지를 삭제하지 않기 때문입니다.
+            이런 특징을 이용해서 하나의 메세지를 여러 컨슈머가 다른 용도로 사용할 수 있도록 시스템을 구성했습니다.
+            실제 프로젝트에서 paymemt-success-topic의 메세지를 상품 주문,장바구니 제거,적립금 수정,상품구매수량 업데이트,
+            결제성공 메일전송 컨슈머에서 각각의 용도에 맞게 사용했습니다.
+        </p>
+    </div>
+</details>
+
+### 성능 관련해서 무엇을 하셨나요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <div>
+            <p>첫번째 무기</p>
+            <p>
+                redis 캐싱을 통해 메인화면 API의 성능을 높인 경험이 있습니다.
+                메인화면 API 호출 시 조회하는 상품 카테고리, 인기상품 조회, 최신상품 조회를 하고 있었고 이 데이터들은 캐싱하기 용이한 데이터라고 판단했습니다.
+                매우 빈번하게 호출 될 가능성이 높고 변경사항이 많더라도 실시간성으로 캐시를 업데이트할 필요가 없다고 판단했기 때문입니다.
+                또한, in-memory storage 면서 다양한 자료구조를 지원해주는 redis를 캐시로 선택했습니다.
+                그리고 정렬된 데이터를 저장하고 있음을 보장 받을 수 있는 sorted-set 자료구조로 key 설계를 하였습니다.
+                결과적으로, 캐싱을 통해 메인화면 API의 성능을 약 450tps에서 약 870tps로 향상시켰습니다.
+            </p>
+        </div>
+        <div>
+            <p>두번째 무기</p>
+            <p>
+                더 많은 트래픽을 분산 처리하기 위해 애플리케이션 서버를 scale-out하여 성능을 높인 경험이 있습니다.
+                부하를 분산시키기 위해 load balancer를 사용하였고 load balancer로 nginx를 사용했습니다.
+                그리고 round-robin 방식을 적용시켜 트래픽을 분산시켰습니다.
+                결과적으로, scale out을 통해 단일서버 기준 약 900tps의 성능을 약 1300tps로 향상시켰습니다.
+            </p>
+        </div>
+        <div>
+            <p>세번째 무기</p>
+            <p>
+                web server 캐싱을 이용해 정적인 컨텐츠의 응답 성능을 높인 경험이 있습니다.
+                nginx 서버 내에 정적인 컨텐츠를 캐싱하여 성능을 높였고 애플리케이션 서버의 부하를 줄였습니다.
+            </p>
+        </div>
+        <div>
+            <p>네번째 무기</p>
+            <p>
+                index 설계를 통해 수십 배 이상의 성능 향상을 보장 받았던 경험이 있습니다.
+                인턴 생활을 하면서 약 4억건의 데이터에서 약250만건의 데이터를 조회하는 쿼리가 있었는데 조회조건으로 사용하고 
+                있던 등록시간 컬럼을 index로 잡아 수십 배 이상의 성능 향상을 보장받았다.
+                또한, 프로젝트를 하면서 exponentialy하게 커지는 테이블 내에서 고정된 숫자의 데이터를 조회하는 쿼리의
+                조건 컬럼으로 index를 생성하여 성능을 향샹시켰습니다.
+            </p>
+        </div>
+        <div>
+            <p>다섯번째 무기</p>
+            <p>
+                thread pool size와 connection pool size 증가를 통해 성능을 향상시켰던 경험이 있습니다.
+                다만, thread pool을 계속해서 증가시킨다고 해서 dramatic하게 성능이 올라가진 않았습니다.
+                thread가 증가함에따라 context switching의 비용이 늘어났기 때문인 것으로 추정됩니다.
+            </p>
+        </div>
+    </div>
+</details>
+
+# 인턴생활
+
+### NoSQL도 여러가지가 있는데 왜 MongoDB를 썼나요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            조회 쿼리가 다양해서 primary index 외에도 secondary index에 대한 기능이 필요하다고 판단했습니다. 
+            그래서 다른 nosql storage보다 secondary index를 잘 지원해주는 mongodb를 선택했습니다.
+        </p>
+    </div>
+</details>
+
+### 왜 떨어진것 같나요? 뭘 배웠나요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            인턴을 하기 전에는 그냥 잘 돌아가는 서비스 개발에만 집중했었습니다. 
+            하지만 인턴과정을 통해 코드리뷰를 받으면서 내가 만든 코드가 얼마나 유연하고 확장성있는지, 
+            그리고 발표 후 피드백 과정에서 내가 만든 서비스가 어느정도의 트래픽을 감당할 수 있는지, 
+            성능은 어떻게 되는지, 그리고 서비스가 커질것을 대비해 어떻게하면 확장성있는 아키텍처를 설계 할 수 있을지에 대해 고민할 줄아는 역량이 부족했고 
+            실무에서는 이러한 역량들이 중요하다는 것을 배웠습니다.
+        </p>
+    </div>
+</details>
+
+# 인성
+
+### Q. 1분 자기소개 해보세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            저는 컴퓨터 공학을 전공했고, 자연스레 개발자를 꿈꾸게 되었습니다.
+            개발자로서 내가 만든 서비스를 사용하는 고객의 삶의 질을 만족 시켜 주겠다 라는 
+            목표를 가지고 있습니다.
+            그리고 현재는 이 목표를 이루기 위해 끊임없이 노력하고 있는 예비 개발자 입니다.
+            또한, 저는 혁신을 이끌어나가는 개발자가 되고 싶습니다.
+            제가 생각하는 혁신을 이끌어나가는 개발자란 어떤 특정 기술에 정체되어 있지 않고 
+            새로운 기술들을 끊임없이 도입하고 시도할 줄 아는 개발자,
+            그리고 어떤 상황이 주어지더라도 주도적으로 스스로 발전할 수 있는 개발자를 말합니다.
+            저는 개발자로서의 역량을 키우기 위해 개인적으로 쇼핑몰 서비스를 제공하는 프로젝트를 만들었습니다.
+            어쩌구저쩌구...  
+        </p>
+    </div>
+</details>
+
+### Q. 지원동기가 뭔가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            먼저, 직접 개발한 서비스를 저 또는 부모님이나 친구들이 직접 사용할 수 있다는 B2C 산업에 매력을 느꼈습니다.
+            ㅁㅁ는 매년 성장하고 있는 회사로 알고있고, 앞으로도 계속 성장할 가능성이 높을 것이라고 판단했습니다.
+            ㅁㅁ의 일원으로서, 혼자 빨리나가는 것이 아닌 함께 멀리 나가는 것을 중요 가치에 두고 함께 성장하고 싶습니다.
+        </p>
+    </div>
+</details>
+
+### Q. 이 회사와서 어떤일을 하고싶어요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            
+        </p>
+    </div>
+</details>
+
+### Q. 이 회사 오면 무엇을 잘할 것 같으세요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            
+        </p>
+    </div>
+</details>
+
+### Q. 어떤 개발자가 되고 싶은가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            개발만 잘한다고 해서 훌륭한 개발자라고 생각하지 않습니다.
+            기계랑만 소통하는 개발자가 아닌 동료분들과 커뮤니케이션을 잘 할 줄 아는 그런 개발자가 되고 싶습니다.
+            혼자 빨리 나아가는것이 아니라, 함께 멀리 나아가는 것을 중요 가치로 생각하는 개발자가 되고 싶습니다.
+        </p>
+    </div>
+</details>
+
+### Q. 개발하면서 가장 중요하다고 생각하는게 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            
+        </p>
+    </div>
+</details>
