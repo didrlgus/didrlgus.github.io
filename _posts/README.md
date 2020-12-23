@@ -735,7 +735,9 @@
             SQL에 의존되는 개발을 피할수 있도록 도와줍니다.
             ORM은 객체와 관계형 데이터베이스를 매핑한다는 뜻입니다.
             ORM은 Object Relation Mapping의 약자로, 객체와 관계형 데이터베이스의 패러다임 불일치 문제를 개발자 대신 해결해줍니다.
-            가령, 다른 객체를 참조하는 걸 RDB에선 표현하기 어려운데 개발자의 별도 코드없이 ORM에서는 이를 대신 매핑해줍니다.
+            가령, RDBMS의 컬럼값으로는 list등 다른 구조를 포함할 수 없는 반면, 메모리 내 데이터 구조에서는 이런 제약이 없어 훨씬 복잡한 구조를 사용합니다. 
+            그 결과 복잡한 메모리 내 데이터 구조를 데이터베이스에 저장하려면 먼저 관계형 표현으로 변환해야 하는데 애때, ORM은
+            개발자의 별도 코드없이 이를 대신 매핑해줍니다.
         </p>
     </div>
 </details>
@@ -1010,6 +1012,16 @@
     </div>
 </details>
 
+### Q. 정규화 과정은 왜 하나요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            
+        </p>
+    </div>
+</details>
+
 #### Q. Spring @Transactional의 propagation에 대해 말해주세요.
 <details>
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
@@ -1045,6 +1057,16 @@
     </div>
 </details>
 
+### Q. mysql의 join의 종류와 각각을 설명해주세요
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            
+        </p>
+    </div>
+</details>
+
 ### Q. 샤딩에 대해 설명해주세요.
 <details>
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
@@ -1052,7 +1074,7 @@
         <p>
             샤딩이란 대량의 데이터를 분산 처리하기 위해 데이터베이스 테이블을 분할하여 물리적으로 서로 다른곳에 
             분산하여 저장하는 것을 말합니다.
-            일반적으로 샤딩키를 기준으로 데이터가 분산되며 샤딩키를 잘 지정하여 데이터가 한쪽 샤드로 몰리게 하는것을 막는 것이 중요합니다.
+            샤딩키를 기준으로 데이터가 분산되며, 샤딩키를 잘 지정하여 데이터가 한쪽 샤드로 몰리게 하는것을 막는 것이 중요합니다.
         </p>
     </div>
 </details>
@@ -1073,6 +1095,58 @@
     <div>
         <p>
             
+        </p>
+    </div>
+</details>
+
+### Q. NoSQL이 무엇인지 설명해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            Not Only SQL의 약자로, 데이터를 처리하는 데에는 SQL 외에 다른 방법들도 있다는 의미 입니다.
+        </p>
+    </div>
+</details>
+
+### Q. RDB 대신 NoSQL을 쓰는 이유는 무엇일까요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            RDB는 트랜잭션을 이용해서 정교한 데이터 처리에 능숙하지만, 이런 정교함은 대량의 데이터를 관리하는데는 걸림돌이 될 수 있습니다.
+            반면, NoSQL은 데이터의 일관성을 약간 포기한 대신 여러 대의 서버에 데이터를 분산하여 저장하는 scale out에 용이합니다.
+            RDB 내에서는 기본적으로 분산처리, sharding/re-balancing, 데이터 복제/자동 복구와 같은 기능등을 제공하지 않습니다.
+            물론, RDB 내에서 서드 파티 도구들로 위의 기능들을 수행할 수도 있겠지만, RDB로 이미 구성된 샤드 클러스터에 샤드를 추가하여 re-balancing 작업을
+            수행한다던지, 로드를 분산시키는 작업들은 많은 노력과 고민이 필요할 수 있습니다.
+            반면, 대부분의 NoSQL은 내부적으로 분산처리, sharding/re-balancing, replica 등의 기능을 제공합니다.
+            그러므로, 엄청난 양이 생성되지만 한번 저장되고 난 뒤에는 수정될 일이 거의 없어
+            데이터의 일관성을 보장할 필요가 없는 가령, read/write만 수행하는 로그 같은 데이터를 처리한다면, NoSQL은 좋은 대안이 될 수 있습니다.
+        </p>
+    </div>
+</details>
+
+### Q. MongoDB가 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            몽고디비는 key와 document 형식의 데이터를 다루는 NoSQL database입니다.
+            document는 JSON 형태이며 schema-less한 형태로 저장될 수 있습니다.
+            몽고디비는 자체적으로 분산 처리, sharding/re-balancing, replica 기능을 
+            제공합니다.
+        </p>
+    </div>
+</details>
+
+### Q. MongoDB에서 schema-less하다는 의미가 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            사용할 필드를 미리 정의하지 안하고 언제든지 필요한 시점에 데이터를 저장할 수 있는 것을 의미합니다.
+            다만, MongoDB는 다른 NoSQL DB들과는 다르게 secondary-index를 생성할 수 있는데, MongoDB의 secondary-index는
+            schema-less가 아니라 항상 먼저 해당 인덱스를 구성하는 필드를 정의해야 한다는 특징이 있습니다.
         </p>
     </div>
 </details>
@@ -1403,6 +1477,16 @@
     </div>
 </details>
 
+### Q. 로드밸런싱 알고리즘아시는 거 설명해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            
+        </p>
+    </div>
+</details>
+
 # 보안
 ### 대칭키와 공개키,개인키가 무엇인가요?
 <details>
@@ -1512,8 +1596,8 @@
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            소프트웨어 개발 방법론의 하나로, 개발(development)과 운영(operation)을 결합한 혼성어이다. 
-            개발 담당자와 운영 담당자가 연계하여 협력하는 개발 방법론을 말한다.
+            소프트웨어 개발 방법론의 하나로, 개발(development)과 운영(operation)을 결합한 혼성어입니다.
+            개발 담당자와 운영 담당자가 연계하여 협력하는 개발 방법론을 말합니다.
         </p>
     </div>
 </details>
@@ -1796,17 +1880,6 @@
             더 나아가 cloud 상에 scale out이 가능한 아키텍처를 구성하여 초 당 수만건의 데이터도 처리할 수 있는
             시스템을 구축했습니다.
         </p>
-        <p>
-            안녕하세요. 저는 ㅇㅇㅇ 입니다.
-            저는 컴퓨터 공학을 전공하였습니다.
-            컴퓨터 공학을 전공하다보니 자연스레 개발자가 되는 것을 꿈꾸게 되었습니다.
-            저는 혁신을 이끌어나가는 개발자가 되는 것이 목표입니다.
-            제가 생각하는 혁신을 이끌어나가는 개발자란 특정 기술에 정체되어 안주하는 개발자가 아니라,
-            새로운 기술들을 끊임없이 시도하여 보다 더 좋은 시스템을 구축하여 위해 주도적으로 노력하는 개발자를 의미합니다.
-            저는 이런 역량들을 키우기위해 개인적으로 쇼핑몰 서비스를 제공하는 프로젝트를 개발하였으며,
-            기능 개발로 끝내는 것이 아니라 클라우드 상에 배포하고, 어떻게 하면 내가 만든 서비스의 성능을 높일지,
-            어떻게 하면 보다 더 확장성 있는 아키텍처를 설계할 수 있을지에 대해 주도적으로 고민한 경험이 있습니다.
-        </p>
     </div>
 </details>
 
@@ -1814,11 +1887,6 @@
 <details>
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
-        <p>
-            먼저, 직접 개발한 서비스를 저 또는 부모님이나 친구들이 직접 사용할 수 있다는 B2C 산업에 매력을 느꼈습니다.
-            ㅁㅁ는 매년 성장하고 있는 회사로 알고있고, 앞으로도 계속 성장할 가능성이 높을 것이라고 판단했습니다.
-            ㅁㅁ의 일원으로서, 혼자 빨리나가는 것이 아닌 함께 멀리 나가는 것을 중요 가치에 두고 함께 성장하고 싶습니다.
-        </p>
         <p>
             ㅇㅇㅇ에서는 특정 기업의 서비스나 솔루션에 의존하지 않고 자체적으로 인프라를 구축하고 서비스나 솔루션을 만든다는 것에 큰 매력을 느꼈기때문입니다.
             또한, ㅇㅇㅇ에서는 끊임없는 새로운 시도를 하고있고, 앞으로의 성장 가능성도 무궁무진할 것으로 판단했기 때문입니다.
@@ -1862,6 +1930,120 @@
 </details>
 
 ### Q. 개발하면서 가장 중요하다고 생각하는게 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            코드를 유연성 있게 설계하고 개발하는 것이 가장 중요한 부분이라고 생각합니다.
+            그 이유는 프로그램은 살아있는 생명체와 같기 때문입니다.
+            만약, 내가 제공하고자 하는 서비스가 웹 서비스라고 가정한다면 해당 서비스를 이용하는 유저들의 
+            요구 사항은 수시로 변경될 수 있습니다. 그런데 요구 사항의 변화에 따라 유연성 있는 코드를 
+            설계하지 못한다면 점점 더 유지 보수 하는데 많은 비용을 초래하게 될 것입니다.
+            그렇기 때문에 코드를 유연성 있게 설계하고 개발하는 것이 가장 중요하다고 생각합니다.
+        </p>
+    </div>
+</details>
+
+### Q. 어떤 방식으로 개발 역량을 키우세요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            내가 공부한 내용을 직접 프로젝트로 만들어 정리하거나 기존 프로젝트에 공부한 내용을 직접 적용 시켜보는 활동입니다.
+            저는 주로 인프런 강의나 관련 서적, 공식문서를 보면서 최근 실무자들이 사용하는 기술에는 어떤 것들이 있는지 학습한 후, 
+            그것으로 끝내는 것이 아니라, 항상 제 프로젝트에 직접 적용 시켰습니다. 
+            예를 들어, JPA, Kafka, ELK stack 등의 기술이 그런 것들 입니다.
+            이런 방식의 학습방식을 통해 개발자로서의 역량이 많이 향상되었다고 생각합니다.
+        </p>
+    </div>
+</details>
+
+### Q. 1일 1커밋을 오랫동안 진행하셨는데, 어떤 내용에 대해서 공부하셨나요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            주로 프로젝트에 개발했던 커밋이나 알고리즘 문제 푼 내용을 커밋한 내용들이 대부분입니다.
+            최근에는 github 블로그를 새로 개설하여 블로그에 관한 커밋들도 늘어나고 있는 상황입니다.
+        </p>
+    </div>
+</details>
+
+### Q. 가장 재밌게 들었던 전공 수업은 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            
+        </p>
+    </div>
+</details>
+
+### Q. 10년뒤 나의 모습이란?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            
+        </p>
+    </div>
+</details>
+
+### Q. 좋은 회사란 무엇인지?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            개발자로서 성장 가능성이 있는 회사가 좋은 회사라고 생각합니다.
+            
+        </p>
+    </div>
+</details>
+
+### Q. 갈등 상황을 어떻게 해소하였나요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            갈등 상황이 있는 팀원들이 있다면 최대한 대화를 하려고 노력하였습니다. 각자 시간을 내어 의견을 들어본 후, 
+            개인적으로 절충안이 있는지 생각해보았고 적당한 절충안이 나오지 않더라도 갈등있는 팀원끼리 모아서 저의 절충안을 
+            제시하고 여기서 각자 양보하고, 양보할 수 없는 선을 결정하라는 식으로 해결을 하는 편이었습니다.
+        </p>
+    </div>
+</details>
+       
+# 손코딩
+### Q. 스택
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            
+        </p>
+    </div>
+</details>
+
+### Q. 링크드리스트
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            
+        </p>
+    </div>
+</details>
+
+### Q. for문을 안쓰고 1-100까지 더하기
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            
+        </p>
+    </div>
+</details>
+
+### Q. *, / 연산자 없이 곱하기, 나누기 연산 수행하기
 <details>
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
