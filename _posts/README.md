@@ -716,16 +716,6 @@
     </div>
 </details>
 
-### Q. spring boot security 인증 과정에 대해 설명해주세요.
-<details>
-    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
-    <div>
-        <p>
-            
-        </p>
-    </div>
-</details>
-
 ### Q. JPA에 대해서 설명해주세요.
 <details>
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
@@ -806,7 +796,7 @@
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            흩어진 관심사를 하나의 Aspect로 모듈화하고 핵심적인 비즈니스 로직에서 분리하여 재사용하는 방식의 프로그래밍 기법을 말합니다.
+            흩어진 관심사를 하나의 aspect로 모듈화하고 핵심적인 비즈니스 로직에서 분리하여 재사용하는 방식의 프로그래밍 기법을 말합니다.
             Spring AOP는 프록시 패턴을 이용해 동작합니다.
             프록시란 타겟 오브젝트을 감싸서 타겟의 요청을 대신 받아주는 Wrapping 오브젝트 입니다.
             클라이언트에서 타겟 메서드를 호출하게 되면 타겟이 아닌 타겟을 감싸고 있는 프록시가 대신 호출되어, 
@@ -823,7 +813,7 @@
             프록시를 컴파일 시점에 생성하면 직접 프록시의 기능을 추가해야해서 번거롭고 코드가 지저분해 질 수 있다는 단점이 있습니다.
             그래서 스프링에서는 이러한 단점을 해결하기 위해 런타임 시점에 타겟에 대한 프록시를 생성해 주는 2가지 기법을 사용합니다.
             첫번째 기술은 Dynamic proxy입니다.
-            다만, Dynamic proxy 기법으로는 클래스 기반의 프록시를 만들지 못하는 한계가 있다. 
+            다만, Dynamic proxy 기법으로는 클래스 기반의 프록시를 만들지 못하는 한계가 있다.
             즉, 타겟 오브젝트가 interface를 구현하고 있지 않다면 Dynamic proxy 기법으로는 프록시를 만들지 못합니다.
             두번째 기술은 CGLIB 방식입니다.
             CGLIB은 인터페이스만 가능했던 dynamic proxy와는 달리 클래스에 대한 Proxy가 가능합니다.
@@ -1012,16 +1002,6 @@
     </div>
 </details>
 
-### Q. 정규화 과정은 왜 하나요?
-<details>
-    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
-    <div>
-        <p>
-            
-        </p>
-    </div>
-</details>
-
 #### Q. Spring @Transactional의 propagation에 대해 말해주세요.
 <details>
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
@@ -1072,8 +1052,7 @@
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            샤딩이란 대량의 데이터를 분산 처리하기 위해 데이터베이스 테이블을 분할하여 물리적으로 서로 다른곳에 
-            분산하여 저장하는 것을 말합니다.
+            샤딩이란 대량의 데이터를 분산 처리하기 위해 데이터베이스 테이블을 분할하여 물리적으로 서로 다른곳에 분산하여 저장하는 것을 말합니다.
             샤딩키를 기준으로 데이터가 분산되며, 샤딩키를 잘 지정하여 데이터가 한쪽 샤드로 몰리게 하는것을 막는 것이 중요합니다.
         </p>
     </div>
@@ -1115,7 +1094,7 @@
     <div>
         <p>
             RDB는 트랜잭션을 이용해서 정교한 데이터 처리에 능숙하지만, 이런 정교함은 대량의 데이터를 관리하는데는 걸림돌이 될 수 있습니다.
-            반면, NoSQL은 데이터의 일관성을 약간 포기한 대신 여러 대의 서버에 데이터를 분산하여 저장하는 scale out에 용이합니다.
+            반면, NOSQL은 데이터의 일관성을 약간 포기한 대신 여러 대의 서버에 데이터를 분산하여 저장하는 scale out에 용이합니다.
             RDB 내에서는 기본적으로 분산처리, sharding/re-balancing, 데이터 복제/자동 복구와 같은 기능등을 제공하지 않습니다.
             물론, RDB 내에서 서드 파티 도구들로 위의 기능들을 수행할 수도 있겠지만, RDB로 이미 구성된 샤드 클러스터에 샤드를 추가하여 re-balancing 작업을
             수행한다던지, 로드를 분산시키는 작업들은 많은 노력과 고민이 필요할 수 있습니다.
@@ -1131,10 +1110,42 @@
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            몽고디비는 key와 document 형식의 데이터를 다루는 NoSQL database입니다.
-            document는 JSON 형태이며 schema-less한 형태로 저장될 수 있습니다.
-            몽고디비는 자체적으로 분산 처리, sharding/re-balancing, replica 기능을 
-            제공합니다.
+            몽고디비는 schema-less한 document 형식의 데이터를 다루는 NoSQL database입니다.
+            몽고디비는 자체적으로 분산 처리, sharding/re-balancing, replica 기능을 제공합니다.
+        </p>
+    </div>
+</details>
+
+### Q. MongoDB의 장점?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            몽고디비의 document는 schema-less 하기 때문에 유연한 동적 데이터 저장이 가능하다는 장점이 있습니다.
+            또한, secondary-index를 지원하여 많은 index를 설정할 수 있고, composite-index를 지원합니다.
+            composite-index란 document 내의 여러 개의 key를 조합한 index인데 composite-index의 순서에 맞게 조회 조건을
+            걸어주면 index-scan을 할 수 있어 높은 성능의 read가 가능합니다.
+            ######### 여기부터 다시
+            또한, Mongo는 Write시에 가상메모리 주소 공간에 데이터를 적재하여 
+            또한, 기본적으로 Replication을 통한 High Availability를 제공하며 Auto-Sharding을 통한 높은 확장성을 제공합니다.
+        </p>
+    </div>
+</details>
+
+### Q. MongoDB의 단점?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            메모리 사용량이 크며 메모리 양에 따라 성능이 좌지우지 됩니다.
+            Memory Mapped(데이터 쓰기 시에 OS의 가상 메모리에 데이터를 넣은 후 비동기로 디스크에 기록하는 방식)를 사용하기 때문에 방대한 
+            데이터를 빠르게 처리할 수 있습니다. 
+            하지만 OS의 메모리를 활용하는 만큼, 메모리가 가득 찰 시 page fault가 발생하고 page fault가 발생하면, page를 memory와 disk 사이에 switching하는 현상이 일어나기 때문에,
+            disk IO가 발생하고, 성능 저하를 유발하게 됩니다.
+            몽고디비의 단점은 key 값이 같이 메모리에 로딩된다는 단점이 있다.
+            또한 특정 key에 해당하는 데이터를 10000개를 넣을 경우, DB에는 10000번의 "birthday"가 함께 저장됩니다.
+            중복된 key값이 계속 들어가기 때문에, 비효율적인 저장이 될 수 밖에 없다는 단점이 있습니다.
+            ({birthday:19920101} {birthday:19000202} {birthday: 18880303})
         </p>
     </div>
 </details>
@@ -1144,9 +1155,20 @@
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            사용할 필드를 미리 정의하지 안하고 언제든지 필요한 시점에 데이터를 저장할 수 있는 것을 의미합니다.
+            사용할 필드를 미리 정의하지 않고 언제든지 필요한 시점에 데이터를 저장할 수 있는 것을 의미합니다.
             다만, MongoDB는 다른 NoSQL DB들과는 다르게 secondary-index를 생성할 수 있는데, MongoDB의 secondary-index는
             schema-less가 아니라 항상 먼저 해당 인덱스를 구성하는 필드를 정의해야 한다는 특징이 있습니다.
+        </p>
+    </div>
+</details>
+
+### Q. MongoDB의 replica-set은 몇 개로 이루어져 있으며 왜 그렇게 이루어져 있나요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            최소 3개 이상으로 이루어져 있습니다.
+            ...
         </p>
     </div>
 </details>
@@ -1232,6 +1254,16 @@
             프로세스/스레드와 core 점유를 바꾸게 되는데 이것을 context switching 이라고 합니다.
             코어점유가 계속 바뀌니까 스레드수가 코어수보다 많아도 동시에 스레드를 처리 할 수 있습니다.
             다만, 스레드가 너무 많아지면 context switching도 많아져서 그에 따른 비용 문제가 발생할 수 있습니다.
+        </p>
+    </div>
+</details>
+
+### Q. 가상 메모리에 대해서 설명해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            
         </p>
     </div>
 </details>
@@ -1468,10 +1500,11 @@
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            TCP 연결을 끊지않고 유지시켜 재사용하는 기법입니다.
+            TCP connection을 끊지않고 유지시켜 재사용하는 기법입니다.
             즉, Handshake 과정이 생략되므로 성능 향상을 기대 할 수 있습니다.
             그러나 요청이 많은 서버 환경에서 Keep Alive 기능을 사용할 경우 모든 요청 마다 연결을 유지해야 하기 때문에
-            오히려 connection을 유지하는데 드는 비용이 커져 성능이 하락할 수 있습니다.
+            오히려 connection을 유지하는데 드는 비용이 커져 서버의 부하가 커지고, 성능이 하락할 수 있습니다.
+            그렇기 때문에 요청이 많이 발생하는 대용량 서비스에서는 사용 시 문제가 발생할 수 있습니다.
             ex) timeout=5, max=100 - 하나의 연결을 5초 동안 유지. 최대 100개의 connection 까지 허용
         </p>
     </div>
@@ -1482,7 +1515,11 @@
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            
+            알고있는 로드밸런싱 방식으로는 round-robin, hashing by source IP, least connections이 있습니다.
+            round-robin은 순차적으로 돌아가며 골고루 여러 서버에 부하를 분산시키는 방법입니다.
+            hashing by source IP는 사용자의 IP를 Hashing하여 부하를 분배하는 방식으로 동일한 IP라면 항상 같은 서버로 연결되는 것을 
+            보장하는 기법입니다.
+            least connections는 현재 각 서버들에서 open된 세션을 고려한 다음, open된 세션이 가장 적은 서버쪽으로 세션을 연결 하는 기법입니다.
         </p>
     </div>
 </details>
@@ -1625,12 +1662,13 @@
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            java는 객체 지향 언어이기 때문에 설계를 잘하면 유지보수가 쉽고 확장성이 좋습니다.
-            또한, 메모리 관리를 개발자가 직접 하지 않고 GC를 
-            이용하므로 메모리를 효율적으로 관리할 수 있으며, 내가 개발하고자 하는 기능에 집중할 수 있었습니다.
-            또한 spring은 개발자가 자바 엔터프라이즈 개발을 수월하게 할 수 있도록 도와주기 때문에 spring을 선택했습니다.
-            그리고 spring은 기본적으로 IOC/DI, AOP, PSA 등을 지원하여 코드를 유연하고 확장성 있게 개발할 수 있도록 도와주고,
+            spring은 기본적으로 IOC/DI, AOP, PSA 등을 지원하여 코드를 유연하고 확장성 있게 개발할 수 있도록 도와주고,
             개발자가 자신의 비즈니스 로직에만 집중하여 생산성을 높일 수 있도록 도와주기 때문에 사용했습니다.
+            또한, java와 스프링은 검증된 다양한 기능들과 오픈소스 생태계를 지원합니다. 
+            예를들어 spring은 다양한 하위 프로젝트들을 제공하며, spring batch나 spring security 등과 같은 spring의 
+            하위 프로젝트들을 사용하게 되면 개발자 입장에서 신경써야 할 부분들이 훨씬 줄어들고 이를 통해 비즈니스 로직에 보다 
+            더 집중하여 생산성을 높일 수 있습니다.
+            이러한 장점들을 이용하기 위해 스프링을 선택했습니다.
         </p>
     </div>
 </details>
@@ -1670,45 +1708,44 @@
         <div>
             <p>첫번째 무기</p>
             <p>
-                결제 성공 API에서 발생했던 여러 비즈니스 로직들의 coupling 문제를 해결한 경험입니다.
-                먼저, 결제 성공 API에서 수행하는 일련의 작업들이 있었습니다.
-                결제 성공 시 주문서 작성, 장바구니 제거, 적립금 수정, 상품 구매 수량 변경, 결제 성공 메일 전송 작업들을 수행했습니다.
-                그런데, 기존에는 이러한 작업들을 결제 성공 API 내에서 수행하고 있었습니다.
-                이러한 코드는 해당 API가 너무 많은 책임들을 갖고 있었고, 각 작업들의 coupling이 심하다는 문제가 있었습니다.
-                또한, 새로운 작업을 추가할 때마다 계속해서 API내 코드를 추가해야돼서 코드의 유연성과 확장성이 떨어져
-                많은 유지보수 비용을 초래한다는 문제가 있었습니다.
+                결제 성공 API에서 발생했던 문제들을 해결한 경험입니다.
+                먼저 상황을 설명드리자면, 결제 성공 시 장바구니 제거, 상품 구매 수량 변경, 적립금 수정, 주문서 작성, 결제완료 메일 전송 작업들을 수행해야 했습니다.
+                그런데, 기존에는 이러한 모든 작업들을 결제 성공 API 내에서 수행하고 있었습니다.
+                이러한 설계의 문제점은 첫째로, 해당 API가 너무 많은 책임들을 갖고 있었고, 각 작업들의 coupling이 심하다는 문제가 있습니다.
+                두번째로, 새로운 작업을 추가할 때마다 계속해서 API내 코드를 추가해야돼서 코드의 유연성과 확장성이 떨어지는 문제가 있습니다.
+                세번째로, 일반적으로 메일 전송 기능은 내가 직접 다룰 수 없는 외부 컴포넌트를 많이 사용하는데, 
+                그로 인해 외부 컴포넌트의 장애가 내 서비스에 영향을 미칠 수 있는 문제가 발생할 수 있습니다.
                 그래서 이 문제를 해결하기 위해 kafka를 이용하였고 기존 API는 결제 성공 event를 전송하는 producer로써의 책임만을 부여했습니다.
-                그리고 결제 성공 시 수행하던 각각의 작업들을 consumer로 구현하였습니다.
-                이를 통해 유연하고 확장성있는 architecture를 구축 할 수 있었습니다.
+                그리고 결제 성공 시 수행하던 각각의 작업들을 consumer group으로 나눠 용도에 맞게 결제 성공 메시지를 사용했습니다.
+                결과적으로 기존 결제 성공 API에서 발생했던 coupling 문제나 확장성 문제, 외부 컴포넌트에 의존하게 되는 문제를 해결할 수 있었습니다.
             </p>
         </div>
         <div>
             <p>두번째 무기</p>
             <p>
-                상품 구매 카운트 consumer scale out 시 생기는 동시성 문제를 해결한 경험입니다.
-                kafka는 1초에 200개의 메시지를 받을 수 있는데 consumer는 100개의 메시지만 처리할 수 있다고 가정한다면 kafka의 해당 topic에서 LAG이 발생합니다.
-                LAG이 계속해서 진행된다면 추후에 심각한 문제가 발생할 수 있기 때문에 이를 해결해야했습니다.
-                이를 해결하는 방법으로는 consumer를 하나 더 늘려 분산처리하는 방법이 있습니다.
-                하지만, consumer를 하나 더 늘리면 상품 구매 카운트 테이블에서 동시성 문제가 발생했습니다.
+                상품 구매 카운트 consumer의 scale out 시 발생했던 문제들을 해결했던 경험입니다.
+                카프카를 이용해서 pub/sub 구조의 아키텍쳐를 구축하였는데 만약, 카프카에 이벤트가 쌓이는 속도를 consumer에서 따라가지 못하면 어떡하지? 라는 의문이 생겼습니다.
+                그렇다면 kafka내 해당 topic의 partition을 2개로 늘리고 consumer를 하나 더 추가시켜 분산처리한다면 문제를 해결할 수 있습니다.
+                하지만, 이 과정에서 문제가 발생했습니다. 문제를 말씀드리기 앞서 오른쪽 부분은 product 테이블의 스키마 일부에 대한 부분입니다.
+                즉, product 테이블 내에 purchase_count 컬럼이 있는 상황입니다.
+                이 상황에서 consumer를 하나 더 늘리게 되면 상품 테이블의 purchase_count 컬럼에서 동시성 문제가 발생합니다.
                 이 문제를 해결하기 위해 SELECT FOR UPDATE 쿼리를 사용해 해당 row에 lock을 걸었습니다.
-                동시성 문제는 해결했지만, 해당 row에 lock이 걸려 기존에 상품을 조회하는 API 성능에 치명적인 문제가 발생했습니다.
-                이 문제를 해결하기 위해 counting을 수행하는 batch server를 만들어 batch server의 local에 counting 데이터를 저장하고 있다가 특정 주기마다 update 시켜준다면, API 서버의 응답 시간에 주는 영향을 줄일 수 있다고 생각했습니다.
-                하지만, 위의 방법은 batch server에 장애가 발생하면 counting 데이터를 잃어버리게 된다는 또 다른 문제를 발생 시켰습니다.
-                그래서 상품 구매 수량 데이터를 저장하는 product_purchase_count 테이블을 새로 생성하여 별도로 저장했습니다. 
-                이로 인해, 데이터의 정합성 문제도 없으면서, 특정 consumer 에 장애가 발생해도 대처가 가능한 결과를 얻었습니다. 
-                또한, product_purchase_count 테이블의 데이터를 sum하는 배치 job을 생성하여 app server의 API 응답 시간의 영향도 최소화 시켰습니다.
-                하지만, 결제 수가 많아질 수록 product_purchase_count 테이블의 크기가 exponentially 하게 커질 가능성이 있었고, product_purchase_count 테이블이 커질수록 sum batch에서 
-                수행하는 작업에 걸리는 시간이 늘어나는 또 다른 문제가 발생했습니다.
-                그래서 product_purchase_count 테이블에 time column을 추가하여 논리적으로 realtime data, old data를 나누었습니다.
+                이를통해, 동시성 문제는 해결했지만, 해당 row에 lock이 걸려 기존에 상품을 조회하는 API 성능에 치명적인 문제가 발생했습니다.
+                이 문제를 해결하기 위해, product_purchase_count 테이블을 새로 생성하였고, product_purchase_count 테이블의 데이터를 sum하는 
+                배치 job을 생성하여 app server의 API 응답 시간의 영향도 최소화 시켰습니다.
+                하지만, 결제 수가 많아질 수록 product_purchase_count 테이블의 크기가 exponentially 하게 커질 가능성이 있었고, 
+                product_purchase_count 테이블이 커질수록 sum batch에서 수행하는 작업에 걸리는 시간이 늘어나는 또 다른 문제가 발생했습니다.
+                그래서 product_purchase_count 테이블에 time column을 추가하여 논리적으로 young area, old area를 나누었습니다.
                 그리고 product_purchase_count 테이블이 커질것을 대비해 count 데이터를 집계하는 테이블인 product_purchase_merge_count 테이블을 생성했습니다.
-                또한, realtime data와 old data를 나눌 기준이 되는 time 데이터를 저장할 product_purchase_count_standart_time 테이블을 생성했습니다.
-                그리고 배치에서 product_purchase_count_job을 생성하고 총 3개의 step으로 분리했습니다.
-                sum step 에서는 product_purchase_count 테이블의 new 데이터와 product_purchase_merge_count 테이블의 old 데이터를 합해 product 테이블의 count 데이터를 업데이트 시킵니다.
-                merge step 에서는 product_purchase_count 테이블의 new 데이터를 집계하여 product_purchase_merge_count 테이블에 insert 합니다.
+                또한, young area와 old area를 나눌 기준이 되는 time 데이터를 저장할 product_purchase_count_standart_time 테이블을 생성했습니다.
+                그리고 배치에서 기존의 job에 merge, delete step을 추가했습니다.
+                sum step 에서는 product_purchase_count 테이블의 young 데이터와 product_purchase_merge_count 테이블의 old 데이터를 합해 product 테이블의 count 데이터를 업데이트 시킵니다.
+                merge step 에서는 product_purchase_count 테이블의 young 데이터를 집계하여 product_purchase_merge_count 테이블에 insert 합니다.
                 delete step 에서는 product_purchase_count 테이블의 old 데이터를 삭제시킵니다.
                 위의 과정들을 통해 결과적으로, 상품 구매 수량 count consumer의 scale-out 상황에서 발생했던 데이터의 정합성 문제와 안정성 문제, 데이터가 많아졌을 때 특정 테이블이 커지는 문제를 해결했습니다. 
                 하지만 현재, 상품 결제 시 실시간으로 상품의 구매 수량 데이터를 업데이트 하지 못한다는 한계를 가지고 있습니다. 
-                어떻게 하면 위의 문제들을 모두 해결하면서 상품 구매 수량 count를 실시간으로 업데이트 시킬지 정확한 답을 아직 찾지는 못했으나, 조사를 통해 대용량 데이터의 실시간 분석이 가능한 lambda architecture에 대해 알게 되어 도입을 고려하고 있습니다.
+                어떻게 하면 위의 문제들을 모두 해결하면서 상품 구매 수량 count를 실시간으로 업데이트 시킬지 정확한 답을 아직 찾지는 못했으나, 
+                조사를 통해 대용량 데이터의 실시간 분석이 가능한 lambda architecture에 대해 알게 되어 도입을 고려하고 있습니다.
             </p>
         </div>
         <div>
@@ -1726,8 +1763,7 @@
                 스프링 배치에서 각 스텝을 tasklet으로 구성했을 때 발생했던 문제를 해결한 경험입니다.
                 tasklet으로 구성하면 데이터 조회 시 조건에 맞는 모든 데이터를 읽어들이고 처리합니다.
                 조회할 데이터의 수가 적다면 문제될 것 없겠지만 조회할 데이터의 매우 많다면 한번에 매우 많은 데이터를 
-                메모리상으로 로딩시켜야 할 것이고 이는 서버에 많은 부하를 주게 될 것이다. 최악의 경우 서버가 다운될 우려도
-                있을 것입니다.
+                메모리상으로 로딩시켜야 할 것이고 이는 서버에 많은 부하를 주게 될 것이다. 최악의 경우 서버가 다운될 우려도 있을 것입니다.
                 이를 방지하기 위해 스프링 배치에서는 데이터를 page 단위로 끊어서 읽는 pageItemReader를 제공합니다.
                 이를 통해 안정적으로 batch job을 수행할 수 있는 배치 애플리케이션을 개발했습니다.
             </p>
@@ -1736,7 +1772,7 @@
             <p>다섯번째 무기</p>
             <p>
                 ELK 스택에서 Logstash 장애 시 생기는 문제를 kafka를 이용해 해결한 경험입니다.
-                filebeat에서 로그 데이터를 보냈는데 logstash가 해당 데이터를 받는 도중에 장애가 나는 경우 또는 
+                filebeat에서 로그 데이터를 보냈는데 logstash가 해당 데이터를 받는 도중에 장애가 나는 경우 또는
                 filebeat에서 로그 데이터를 logstash로 보낸 후 logstash에서 로그 데이터를 parsing하는 도중에 장애가 
                 나버리면 최악의 경우, 데이터의 손실이 발생할 수 있었습니다.
                 왜냐하면, logstash나 filebeat 모두 어디에서도 안정성을 보장해주지 못하기 때문입니다.
@@ -1769,9 +1805,32 @@
             kafka는 메세지를 저장하는 하나의 토픽에 대해 여러 용도로 사용할 수 있기 때문입니다.
             일반적인 메세지 큐는 특정 컨슈머가 메세지를 소비하면 큐에서 메세지가 삭제되어 다른 컨슈머에서는
             가져갈 수 없는데, 카프카는 컨슈머가 메세지를 소비해도 해당 메세지를 삭제하지 않기 때문입니다.
-            이런 특징을 이용해서 하나의 메세지를 여러 컨슈머가 다른 용도로 사용할 수 있도록 시스템을 구성했습니다.
-            실제 프로젝트에서 paymemt-success-topic의 메세지를 상품 주문,장바구니 제거,적립금 수정,상품구매수량 업데이트,
-            결제성공 메일전송 컨슈머에서 각각의 용도에 맞게 사용했습니다.
+            프로젝트에서 이런 카프카의 특징을 이용해서 하나의 메세지를 여러 컨슈머가 다른 용도로 사용할 수 있도록 시스템을 구성했습니다.
+        </p>
+    </div>
+</details>
+
+### 왜 Load Balancer로 nginx를 선택했나요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            nginx는 event-driven 방식의 single thread process로 구성되어 가볍고, 
+            비동기 처리를 통해 높은 성능을 보장합니다.
+            즉, nginx는 적은 자원을 이용해 빠른 서비스를 보장해주기 때문에 선택했습니다.
+        </p>
+    </div>
+</details>
+
+### 비동기의 장점에는 무엇이 있을까요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            장애나 과부하 등이 발생해 응답 속도가 느려지면, 동기 방식은 문제가 발생한 백엔드를 거치지 않는 요청까지도 
+            함께 피해를 볼 수 있기 때문에 시스템 전반적인 장애로 번지게 되는 경우가 많습니다. 
+            반면 비동기 방식은 문제가 발생한 백엔드를 거치지 않는 요청은 특별한 튜닝 없이도 깔끔하게 처리해 낼 수 있어 
+            장애가 크게 번지지 않습니다.
         </p>
     </div>
 </details>
@@ -1784,10 +1843,11 @@
             <p>첫번째 무기</p>
             <p>
                 redis 캐싱을 통해 메인화면 API의 성능을 높인 경험이 있습니다.
-                메인화면 API 호출 시 조회하는 상품 카테고리, 인기상품 조회, 최신상품 조회를 하고 있었고 이 데이터들은 캐싱하기 용이한 데이터라고 판단했습니다.
+                메인화면 API 호출 시 조회하는 상품 카테고리, 인기상품 조회, 최신상품 조회를 하고 있었고, 이 데이터들은 캐싱하기 용이한 데이터라고 판단했습니다.
                 매우 빈번하게 호출 될 가능성이 높고 변경사항이 많더라도 실시간성으로 캐시를 업데이트할 필요가 없다고 판단했기 때문입니다.
                 또한, in-memory storage 면서 다양한 자료구조를 지원해주는 redis를 캐시로 선택했습니다.
                 그리고 정렬된 데이터를 저장하고 있음을 보장 받을 수 있는 sorted-set 자료구조로 key 설계를 하였습니다.
+                (범위 조회 시 O(logN)+M(N은 전체 요소 개수, M은 return할 요소 개수), 데이터 하나 추가 시 O(logN))
                 결과적으로, 캐싱을 통해 메인화면 API의 성능을 약 450tps에서 약 870tps로 향상시켰습니다.
             </p>
         </div>
@@ -1811,10 +1871,11 @@
             <p>네번째 무기</p>
             <p>
                 index 설계를 통해 수십 배 이상의 성능 향상을 보장 받았던 경험이 있습니다.
-                인턴 생활을 하면서 약 4억건의 데이터에서 약250만건의 데이터를 조회하는 쿼리가 있었는데 조회조건으로 사용하고 
-                있던 등록시간 컬럼을 index로 잡아 수십 배 이상의 성능 향상을 보장받았다.
-                또한, 프로젝트를 하면서 exponentialy하게 커지는 테이블 내에서 고정된 숫자의 데이터를 조회하는 쿼리의
-                조건 컬럼으로 index를 생성하여 성능을 향샹시켰습니다.
+                인턴 생활을 하면서 약 4억건의 데이터에서 약 250만건의 데이터를 조회하는 쿼리가 있었는데 조회조건으로 사용하고 
+                있던 등록시간 컬럼을 index로 잡아 수십 배 이상의 성능 향상을 보장 받은 경험이 있습니다.
+                또한, 프로젝트를 하면서 exponentialy하게 커지는 테이블 내에서 고정된 숫자의 데이터를 조회하는 쿼리였던,
+                인기 top10 상품 조회 쿼리에서 where 조건 컬럼이었던 purchase_count 컬럼을 대상으로 index를 생성하여 성능을 
+                향샹시켰던 경험이 있습니다.
             </p>
         </div>
         <div>
@@ -1835,8 +1896,8 @@
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            조회 쿼리가 다양해서 primary index 외에도 secondary index에 대한 기능이 필요하다고 판단했습니다. 
-            그래서 다른 nosql storage보다 secondary index를 잘 지원해주는 mongodb를 선택했습니다.
+            조회 쿼리가 다양한 테이블이어서 primary index 외에도 secondary index에 대한 기능이 필요하다고 판단했습니다.
+            그래서 다른 nosql storage보다 secondary index를 잘 지원해주는 mongodb를 선택했었습니다.
         </p>
     </div>
 </details>
@@ -1847,10 +1908,11 @@
     <div>
         <p>
             인턴을 하기 전에는 그냥 잘 돌아가는 서비스 개발에만 집중했었습니다. 
-            하지만 인턴과정을 통해 코드리뷰를 받으면서 내가 만든 코드가 얼마나 유연하고 확장성있는지, 
-            그리고 발표 후 피드백 과정에서 내가 만든 서비스가 어느정도의 트래픽을 감당할 수 있는지, 
-            성능은 어떻게 되는지, 그리고 서비스가 커질것을 대비해 어떻게하면 확장성있는 아키텍처를 설계 할 수 있을지에 대해 고민할 줄아는 역량이 부족했고 
-            실무에서는 이러한 역량들이 중요하다는 것을 배웠습니다.
+            하지만 인턴과정의 코드리뷰나 발표과정을 통해 내가 만든 서비스가 어느정도의 트래픽을 감당할 수 있는지, 
+            성능은 어떻게 되는지, 그리고 서비스가 커질것을 대비해 어떻게하면 확장성있는 아키텍처를 설계 할 수 있을지에 
+            대해 고민할 줄아는 역량이 부족하다는 것을 느꼈고, 결국, 이러한 역량 부족으로 인해 떨어졌다고 생각합니다.
+            인턴 과정을 통해 진정한 백엔드 개발자로서 갖추어야 할 역량들에 대해서 알게 되었고, 백엔드 개발에 대한 시야가
+            넓어졌다고 생각합니다.
         </p>
     </div>
 </details>
@@ -2011,7 +2073,41 @@
         </p>
     </div>
 </details>
-       
+
+### Q. 본인의 강점은 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            저의 가장 큰 강점은 꾸준함과 끈기라고 생각합니다.
+            최근 1년 동안 거의 매일 개발 혹은 알고리즘 문제 풀이를 꾸준히 진행하고 있고, 이에 대한 과정들은 github 커밋 이력으로 남겨져 있습니다.
+            또한, 프로젝트를 개발하면서 끊임없이 문제상황들을 가정하고 끈기있게 주도적으로 해결해 본 경험을 갖고 있습니다.
+            속도가 느릴지라도 하루하루 꾸준히 성장하는 개발자가 되는 것이 앞으로의 목표입니다.
+        </p>
+    </div>
+</details>
+
+### Q. 본인의 단점은 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            
+        </p>
+    </div>
+</details>
+
+### Q. 검색 서비스에서 불편했던 점은?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            해외 전문 지식을 얻기 위해
+            다만, 어떤 물건을 사려고 할 때는 굉장히 좋았고     
+        </p>
+    </div>
+</details>
+
 # 손코딩
 ### Q. 스택
 <details>
