@@ -28,12 +28,14 @@
     <div>
         <p>
             자바 프로그램이 실행되면 JVM은 OS로부터 자바 프로그램 실행에 필요한 메모리(Runtime Data Area)를 할당받고, 할당받은 메모리를 용도에 따라 여러 영역으로 나눕니다.
-            그 중, 대표적인 영역으로는 Method, Heap, Stack이 있습니다.
+            그 중, 대표적인 영역으로는 static, Heap, Stack이 있습니다.
         </p>
         <p>
-            Method 영역에는 멤버 변수의 이름, 데이터 타입, 접근제어자에 대한 field 정보와 메서드의 이름, 리턴 타입, 파라미터, 접근 제어자에 대한 정보,
-            그리고 class 이름과 같이 class 정보들이 저장됩니다. 또한 static 으로 선언된 데이터들이 저장됩니다.
-            Method 영역에 저장된 데이터들은 모든 스레드에서 공유할 수 있는 자원입니다.
+            static 영역에는 멤버 변수의 이름, 데이터 타입, 접근제어자에 대한 field 정보와 메서드의 이름, 리턴 타입, 
+            파라미터, 접근 제어자에 대한 정보, 그리고 class 이름과 같이 class 정보들이 저장됩니다. 
+            또한 static 으로 선언된 데이터들이 저장됩니다.
+            static 영역에 로딩된 데이터들은 프로그램이 끝날때까지 유지되는 자원입니다.
+            또한, static 영역에 저장된 데이터들은 모든 스레드에서 공유할 수 있는 자원입니다.
         </p>
         <p>
             Heap 영역은 new 키워드로 생성된 객체와 배열이 생성되는 영역입니다.
@@ -55,7 +57,7 @@
         <p>
             먼저 JAVA 원시 file (example.java)이 JAVA 컴파일러(javac.exe)에 의해 (example.class) 바이트코드 파일로 변환됩니다.
             그 후 JVM 내에 있는 Class Loader가 runtime data area로 해당 바이트코드 파일을 적재시킵니다.
-            그다음 JVM 내에 있는 Execution engine이 runtime data area에 적재된 바이트 코드들을 기계어로 변경해 명령어 단위로 실행합니다.
+            그 다음 JVM 내에 있는 Execution engine이 runtime data area에 적재된 바이트 코드들을 기계어로 변경해 명령어 단위로 실행합니다.
         </p>
     </div>
 </details>
@@ -69,9 +71,10 @@
             GC의 수거 대상은 heap 영역에 있는 unreachable 즉, 참조를 갖고있지 않은 객체입니다.
             또한 GC는 내부적으로 Mark and Sweep 알고리즘을 사용하여 객체를 삭제하는데, 
             Mark는 GC의 root로부터 모든 변수를 스캔하면서 각각 어떤 객체를 참조하고 있는지 찾아서 마킹하는 과정입니다.
-            즉, reachable과 unreachable을 판단하는 과정을 의미합니다. 여기서 GC root가 될 수 있는 조건은 stack 영역의 지역변수나 파라미터들, method 영역의 static 변수들입니다.
+            즉, reachable과 unreachable을 판단하는 과정을 의미합니다. 여기서 GC root가 될 수 있는 조건은 stack 영역의 지역변수나 파라미터들, static 영역의 static 변수들입니다.
             그리고 sweep는 unreachable한 객체들을 heap에서 제거하는 과정입니다. 
-            sweep과정이 끝나면 compact 과정이 추가될 수 있는데 compact 과정은 heap에서 제거된 객체가 있던 메모리 공간으로 인해 생길 수 있는 메모리 단편화 문제를 막아주는 작업입니다.
+            sweep과정이 끝나면 compact 과정이 추가될 수 있는데 compact 과정은 heap에서 제거된 객체가 있던 메모리 공간으로 인해 생길 수 있는 
+            메모리 단편화 문제를 막아주는 작업입니다.
             또한 gc 작업을 수행하는 쓰레드를 제외한 모든 쓰레드가 작업을 중지하는 현상을 stop the world라고 부릅니다.
         </p>
     </div>
@@ -83,14 +86,14 @@
     <div>
         <p>
             GC의 세부 동작방식을 말씀드리기에 앞서 heap의 구조를 먼저 말씀드리면, heap은 크게 young gen과 old gen으로 나뉩니다. young gen은 새로운 생성된 객체들이 할당되는 영역이고 old gen은 young gen에서 오래 살아남은 객체들이 존재하는 영역입니다.
-            그리고 young gen은 다시 eden, survivor1, survivor2 영역으로 나뉩니다.
+            그리고 young gen은 다시 eden과 두개의 survivor 영역으로 나뉩니다. 앞으로 이 두개의 survivor 영역을 각각 survivor-1,survivor-2라고 가정하겠습니다.
             GC의 동작과정에 대해서 말씀드리면 먼저 새로운 객체들이 eden 영역에 추가됩니다. 그리고 eden 영역이 가득차면 young gen을 대상으로 mark and sweep 작업이 수행되는데 이를 'minor gc'라고 부릅니다.
             'minor gc' 작업을 통해 reachable 한 객체는 살아남고 unreachable한 객체는 제거됩니다. 그리고 'minor gc' 작업을 통해 살아남은 reachable한 객체는 survivor1 또는 survivor2 영역중 한곳으로 이동합니다.
             이때, 객체가 survivor1과 survivor2에 공존하지 않고 어느 한 영역에만 존재합니다.
             그리고 survivor에 이동된 살아남은 객체는 age가 하나씩 추가됩니다. 위의 과정이 반복되면서 하나의 Survivor 영역이 가득 차게 되면 'minor gc'가 수행되고 그 중에서 살아남은 객체를 다른 Survivor 영역으로 이동시킵니다. 
-            그리고 가득 이전 Survivor 영역은 아무 객체도 없는 상태로 비워둡니다.
+            그리고 이전 Survivor 영역은 아무 객체도 없는 상태로 비워둡니다.
             위의 과정을 반복하다 survivor에 있는 객체의 age가 특정 임계점에 다다르면 해당 객체는 old gen으로 이동되는데 이 과정을 promotion이라고 합니다.
-            위의 모든 과정을 반복하면서 old gen이 가득차게 되면 'major gc' 작업이 수행됩니다.
+            위의 모든 과정을 반복하면서 old gen이 가득차게 되면 old 영역에서 gc 작업을 수행하는데 이를 'major gc' 라고 합니다.
         </p>
     </div>
 </details>
@@ -131,15 +134,22 @@
         <p>
             먼저 S에 해당하는 SRP, single responsibility principle은 한 클래스는 하나의 책임만 가져야 한다는 원칙입니다.
             여기서 중요한 기준은 변경 입니다. 변경이 있을 때 파급 효과가 적으면 SRP를 잘 따른 것이라고 볼 수 있습니다.
+        </p>
+        <p>
             다음으로 O는 OCP, Open Closed Priciple, 개방-폐쇄 원칙을 의미합니다. 소프트웨어 요소는 확장이나 변경에는 열려 있으나 변경에는 닫혀 있어야 한다는 원칙입니다.
             즉, 내가 어떤 코드를 추가 했을 때, 기존 코드에 대한 변경이 없다면 OCP를 잘 따른 것이라고 볼 수 있습니다.
+        </p>
+        <p>
             다음으로, L은 Liskov Substitution Priciple, 리스코프 치환 원칙입니다. 
             이는 다형성에서 하위 클래스는 인터페이스 규약을 다 지켜야 한다는 것을 의미합니다.
             단순히 컴파일 성공하는 것을 넘어서는 이야기입니다. 예를들어, 자동차 인터페이스가 있고 엑셀이라는 기능이 선언되어있다고 할때, 
             자동차 인터페이스의 구현체는 엑셀 기능을 앞으로 가는 기능으로 만들어야지 뒤로 가는 기능으로 만들면 안됩니다.
+        </p>
+        <p>
             다음으로, I는 Interface Segregation Principle, 인터페이스 분리 원칙입니다.
             인터페이스 여러 개가 범용 인터페이스 하나보다 낫다는 원칙입니다.
             인터페이스를 분리하면 인터페이스가 명확해지고, 대체 가능성이 높아지기 때문입니다.
+         <p>
             마지막으로 D는 Dependency Inversion Principle, 의존관계 역전의 원칙입니다.
             프로그래머는 추상화에 의존해야지, 구체화에 의존하면 안된다는 원칙입니다.
             즉, 클라이언트가 인터페이스에 의존해야지 유연하게 구현체를 변경할 수 있습니다. 구현체에 의존하게 되면 유연성이 떨어집니다. 
@@ -154,10 +164,13 @@
         <p>
             추상클래스와 인터페이스의 가장 큰 차이점은 사용용도라고 생각합니다.
             추상 클래스는 서브 클래스에서 슈퍼 클래스의 기능을 그대로 상속받아 확장시키려는 것이 목적입니다.
-            이에반해, 인터페이스는 결합도가 낮은 코드를 만들어 코드의 유연성과 확장성을 높여 유지보수 비용을 최소화 시키려는 것이 목적입니다.
-            추상클래스는 서브클래스와 슈퍼클래스간의 상속의 관계가 필요한 IS-A 관계이며, 하위 상세 클래스에서 공통된 기능은 그대로 물려받고 별도의 구현이 필요한 부분이 남아있을때 사용하면 되지만, 
-            꼭 필요한 경우를 제외하고 상속은 피하는게 좋은 디자인이라고 생각합니다.
-            상속의 특성상 서브클래스가 슈퍼클래스에 의존하는 관계가 되기 때문에 결합도가 높아 코드의 유연성을 떨어뜨릴 수 있다는 단점이 있기 때문입니다.
+            이에반해, 인터페이스는 인터페이스를 구현한 객체들은 같은 행위를 한다는 것을 명시하기 위함이 목적입니다.
+            추상클래스는 서브클래스와 슈퍼클래스간의 상속의 관계가 필요한 IS-A 관계이며, 하위 상세 클래스에서 공통된 기능은 그대로 
+            물려받고 별도의 구현이 필요한 부분이 남아있을때 사용하면 되지만, 꼭 필요한 경우를 제외하고 상속은 피하는게 좋은 디자인이라고 생각합니다.
+            상속의 특성상 서브클래스가 슈퍼클래스에 의존하는 관계가 되기 때문에 결합도가 높아 코드의 유연성을 떨어뜨릴 수 
+            있다는 단점이 있기 때문입니다.
+            그에 반해 인터페이스는 행위의 조건(parmeter)와 결과(return)값만 강제하지 내용은 구현하는 각 클래스에 맡겨져 있기 때문에 
+            구현에 종속되지 않습니다.
         </p>
     </div>
 </details>
@@ -169,8 +182,10 @@
         <p>
             한 클래스 내에 같은 이름의 메서드를 여러개 정의하는 것을 메서드 오버로딩이라고 합니다.
             오버로딩은 기존 메서드와 매개변수의 개수 또는 타입이 달라야 한다는 조건이 있습니다.
+            오버로딩은 새로운 메서드를 정의하는 것입니다.
             메서드 오버라이딩은 부모 클래스로부터 상속받은 메서드의 내용을 자식 클래스에서 변경하는 것을 의미합니다.
             오버라이딩은 부모 클래스의 메서드와 매개변수와 리턴타입이 같아야 한다는 조건이 있습니다.
+            오버라이딩은 기존에 있었던 메서드를 재정의하는 것입니다.
         </p>
     </div>
 </details>
@@ -209,11 +224,12 @@
             자바에서는 실행 시 발생할 수 있는 프로그램 오류를 에러(Error)와 예외(Exception) 두 가지로 구분합니다.
             에러는 프로그래머가 애플리케이션 내에서 처리할 수 없는 심각한 오류를 말하고, 
             예외는 프로그래머가 처리할 수 있는 오류를 말하며, 주로 프로그래머의 실수로 인해 발생하는 오류입니다.
+            대표적으로 OutOfMemoryError, stackOverFlow 에러가 있습니다.
             그리고 예외는 내부적으로 CheckedException과 UncheckedException 으로 나뉘는데,
             CheckedException은 프로그래머가 별도의 예외처리를 하지 않으면 컴파일 단계에서 오류를 발생시키는 예외이고,
-            대표적으로 OutOfMemoryError가 있습니다.
+            대표적으로 SQLException, IOException 등이 있습니다.
             그리고 UncheckedException은 프로그래머가 별도의 예외처리를 하지 않아도 컴파일 단계에서 오류를 발생시키지 않는 예외입니다.
-            대표적으로 RuntimeException이 있습니다.
+            대표적으로 NullPointerException이 있습니다.
             예외는 throws new 를 통해 발생 시킬 수 있으며, 예외를 처리하기 위해서는 try, catch 문이나 throw 키워드를 이용해 처리할 수 있습니다.
         </p>
     </div>
@@ -225,8 +241,8 @@
     <div>
         <p>
             final은 클래스나 멤버에 적용할 수 있는 keyword이고 어디에 적용하느냐에 따라 의미가 달라집니다.
-            먼저, 클래스에 적용 시 해당 클래스를 상속받을 수 없습니다. 그리고 Primitive 변수에 적용 시 해당 변수의 값을 변경할 수 없습니다.
-            그리고 Reference 변수에 적용 시 해당 referenct 변수가 힙(heap) 내의 다른 객체를 참조할 수 없습니다.
+            먼저, 클래스에 적용 시 해당 클래스를 상속받을 수 없습니다. 그리고 Primitive type의 변수에 적용 시 해당 변수의 값을 변경할 수 없습니다.
+            그리고 Reference type의 변수에 적용 시 해당 referenct 변수가 힙(heap) 내의 다른 객체를 참조할 수 없습니다.
             그리고 메서드에 적용 시 해당 메서드를 오버라이딩 할 수 없습니다.
         </p>
     </div>
@@ -257,7 +273,7 @@
             HashMap, HashTable, HashSet, LinkedHashSet 등에서 key를 결정할때 hashcode()를 사용합니다. 
             즉, 각 인스턴스의 hashCode()의 결과가 같다면 동일한 key로 간주합니다.
             일반적으로 equals()가 true이면, 두 객체의 hashCode 값은 항상 같아야 한다는 규약이 있습니다.
-            다만, equals() 메소드가 false 경우에는 두 객체의  hashCode값이 꼭 다를 필요는 없습니다.
+            다만, equals() 메소드가 false 라고해서 두 객체의  hashcode()값이 꼭 다를 필요는 없습니다.
         </p>
     </div>
 </details>
@@ -281,7 +297,7 @@
         <p>
             String 객체는 immutable하기 때문에 지정된 문자열을 변경할 수 없지만 StringBuffer, StringBuilder 클래스는 인스턴스는 변경이 가능합니다.
             또한, StringBuffer, StringBuilder는 문자열을 변경할 수 있기 때문에 많은 문자열 연산을 요구하는 프로그램일 경우 String 클래스보다 
-            메모리 공간을 훨씬 더 효율적으로 사용할 수 있다.
+            메모리 공간을 훨씬 더 효율적으로 사용할 수  
             다만, StringBuffer 클래스는 String 클래스와 다르게 equals 메서드를 오버라이딩 하지 않는다.
             그리고 StringBuilder는 StringBuffer에서 쓰레드의 동기화 기능만 뺀 클래스입니다.
             즉, 멀티쓰레드가 아닌 환경에서는 StringBuilder가 StringBuffer보다 더 유리합니다.
@@ -295,8 +311,8 @@
     <div>
         <p>
             mutable 객체는 생성된 후에도 속성값을 변경할 수 있는 객체입니다.
-            mutable의 장점은 메모리 낭비를 막을 수 있다는 것입니다.
-            단점은 multithread 환경에서 thread safe를 보장할 수 없으며, 
+            mutable의 장점은 메모리 낭비를 최소화 시킬 수 있다는 것입니다.
+            단점은 multithread 환경에서 thread safe를 보장할 수 없으며,
             변하지 말아야 하는 객체라면 추후에 변할 수도 있다는 우려가 있을 수 있습니다.
             immutable 객체는 객체가 생성된 후에 속성값을 변경할 수 없는 객체입니다.
             대표적으로 String과 wrapper 클래스가 있습니다.
@@ -353,7 +369,7 @@
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            HashMap은 내부적으로 Hashing을 사용해 데이터를 저장하고 TreeMap은 Red-Black 트리를 사용해 데이터를 저장합니다.
+            HashMap은 내부적으로 Hashing을 사용해 데이터를 저장하고 TreeMap은 내부적으로 Red-Black 트리를 사용해 데이터를 저장합니다.
             그렇기 때문에 hashmap은 O(1)의 데이터 조회가 가능한데 반해 treemap은 O(logN)의 데이터 조회가 가능합니다.
             또한, TreeMap은 HashMap과 다르게 데이터 저장 시 데이터의 순서를 보장합니다.
             그리고 LinkedHashMap도 마찬가지로 HashMap과 다르게 데이터 저장 시 데이터의 순서를 보장합니다.
@@ -385,17 +401,27 @@
     </div>
 </details>
 
+### Q. 함수형 프로그래밍이 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            함수를 값으로 바라보고 명령형이 아닌 선언형으로 프로그래밍 하는 프로그래밍 방식을 말합니다.
+            자바에서는 스트림 API와 람다를 이용하여 함수형 프로그래밍을 할 수 있습니다.
+        </p>
+    </div>
+</details>
+
 ### Q. 스트림 API가 무엇인가요?
 <details>
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            스트림 API는 컬렉션이나 배열에 함수형 인터페이스 또는 람다식을 적용시켜 저장된 요소를 하나씩 참조하며 반복적으로 
-            처리할 수 있도록 해주는 기능입니다.
-            stream은 시작, 중간, 최종 연산으로 이루어져 있으며 Immutable 하다는 특징이 있습니다. 즉, 원본의 데이터를 변경하지 않습니다.
-            또한, stream은 재사용할 수 없습니다.
-            스트림 API 사용하면 for, if와 같은 불필요한 코딩을 걷어낼 수 있고 직관적이기 때문에 가독성이 좋아지고 실수의 여지를 줄여줍니다.
-            또한 병렬처리가 가능해 빠른 처리가 가능합니다.
+            스트림 API는 컬렉션, 배열 등에 저장된 요소들에 쉽게 접근할 수 있도록 추상화된 기술을 제공합니다.
+            stream은 시작, 중간, 최종 연산으로 이루어져 있으며 Immutable 하다는 특징이 있습니다. 
+            즉, 원본의 데이터를 변경하지 않으며 또한, stream은 추후에 재사용할 수 없습니다.
+            스트림 API 사용하면 for, if와 같은 불필요한 코딩을 걷어낼 수 있고 직관적이기 때문에 가독성이 좋아지고 실수의 여지를 줄여준다는 장점이 있습니다.
+            또한 parallel stream을 이용하면 병렬처리가 가능해 빠른 처리가 가능하다는 장점이 있습니다.
         </p>
     </div>
 </details>
@@ -406,7 +432,7 @@
     <div>
         <p>
             map은 단일 스트림 안의 요소를 원하는 특정 형태로 변환시켜주는 중간 연산 메서드입니다.
-            flatMap은 스트림의 형태가 배열과 같을 때, 모든 원소를 단일 원소 스트림으로 반환시켜주는 중간 연산 메서드 입니다.
+            flatMap은 스트림의 형태가 배열이나 리스트 일때 각 리스트의 모든 원소를 단일 원소 스트림으로 반환시켜주는 중간 연산 메서드 입니다.
         </p>
     </div>
 </details>
@@ -416,10 +442,10 @@
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            접근 제어자란 클래스나 클래스 멤버의 선언 시 사용하여 부가적인 의미를 부여하는 키워드를 의미합니다.
-            자바에서는 객체지향의 정보 은닉을 위해 접근 제어자라는 기능을 제공하며, public, protected, default, private이 있습니다.
+            접근 제어자란 클래스나 클래스의 멤버 선언 시 사용하여 부가적인 의미를 부여하는 키워드를 의미합니다.
+            자바에서는 객체지향의 정보 은닉을 위해 접근 제어자라는 기능을 제공하며, public, protected, default, private 이 있습니다.
             public으로 선언된 클래스 멤버는 외부로 공개되며, 해당 객체를 사용하는 프로그램 어디에서나 해당 멤버에 직접 접근할 수 있습니다.
-            protected로 선언된 클래스 멤버는 같은 패키지 혹은 다른패키지에서 해당 클래스를 상속한 객체에서 접근이 가능합니다.
+            protected로 선언된 클래스 멤버는 같은 패키지 혹은 다른패키지에서 해당 클래스를 상속한 클래스에서 접근이 가능합니다.
             접근 제어자가 따로 지정되지 않으면 자동적으로 default 접근 제어를 갖게 되는데, 
             default 접근 제어를 갖는 클래스 멤버는 같은 클래스의 멤버와 같은 패키지에 속하는 멤버에서만 접근할 수 있습니다.
             private으로 선언된 클래스 멤버는 같은 클래스 내에서만 접근이 가능하고 외부에서는 접근이 불가합니다.
@@ -433,8 +459,8 @@
     <div>
         <p>
             직렬화는 Object를 연속된 문자열 데이터나 연속된 byte데이터로 바꾸는 과정을 말합니다.
-            직렬화가 필요한 이유는 메모리상에 저장되는 Object는 네트워크 상에 두 컴포넌트가 통신을 할때 통신선을 통해 직접적으로 전송이 불가해서
-            통신선을 통해 전송이 가능한 JSON,XML,YAML,Byte 파일 등으로 바꾸어서 전송해야하기 때문입니다.
+            직렬화가 필요한 이유는 메모리상에 저장되는 Object는 네트워크 상에 두 컴포넌트가 통신을 할때 통신선을 통해 
+            직접적으로 전송이 불가해서 통신선을 통해 전송이 가능한 JSON,XML,YAML,Byte 파일 등으로 바꾸어서 전송해야하기 때문입니다.
             이와 반대로, 직렬화된 데이터를 Object 형태로 변환시키는 작업을 역직렬화라고 합니다.
         </p>
     </div>
@@ -447,8 +473,10 @@
         <p>
             리플렉션은 컴파일되어 JVM static 영역에 로딩돼있는 클래스의 메타데이터를 이용해 
             런타임 시점에 해당 클래스의 인스턴스를 생성하고 멤버에 접근할 수 있도록 해주는 자바 API입니다.            
-            리플렉션은 애플리케이션 개발에서보다는 프레임워크나 라이브러리에서 많이 사용되는데, 대표적으로 스프링에서 bean을 등록하고 의존관계를 주입할때 리플렉션을 사용합니다.
-            다만, 런타임 시점에서 객체를 생성하여 해당 멤버에 접근해 조작하는 방식이기 때문에 컴파일 상에서는 잡히지 않았던 버그가 런타임 시점에 생길 수 있습니다.
+            리플렉션은 애플리케이션 개발에서보다는 프레임워크나 라이브러리에서 많이 사용되는데, 대표적으로 스프링에서 bean을 
+            등록하고 의존관계를 주입할때 리플렉션을 사용합니다.
+            다만, 런타임 시점에서 객체를 생성하여 해당 멤버에 접근해 조작하는 방식이기 때문에 컴파일 상에서는 잡히지 않았던 
+            버그가 런타임 시점에 생길 수 있습니다.
         </p>
     </div>
 </details>
@@ -485,7 +513,7 @@
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            개발자들이 애플리케이션 개발을 빠르고 효율적으로 할 수 있도록 도움을 주는 틀 입니다.
+            개발자들이 애플리케이션 개발을 빠르고 효율적으로 할 수 있도록 기본적인 뼈대를 제공하는 틀 입니다.
         </p>
     </div>
 </details>
@@ -513,7 +541,7 @@
             의존관계란, 하나의 객체가 다른 객체의 상태에 따라 영향을 받는 것을 의미합니다. 스프링에서는 이러한 의존관계를
             개발자가 직접 관리하지 않고 스프링 컨테이너라는 곳에서 관리하며 의존관계가 필요할 때마다 스프링 컨테이너에서 개발자 코드상으로
             주입해줍니다. 즉, 스프링에서 IOC를 구현한 한가지 방법이 DI이며 IOC는 DI를 포함하는 개념입니다.
-            이를통해, 개발자는 객체의 라이프사이클이나 의존관계를 신경쓸 필요없이 자신의 비즈니스 로직에만 집중하여 생산성을 높일 수 있습니다.
+            이를 통해, 개발자는 객체의 라이프사이클이나 의존관계를 신경쓸 필요없이 자신의 비즈니스 로직에만 집중하여 생산성을 높일 수 있습니다.
             AOP는 대부분의 서비스들이 공통으로 가지고 있는 보안, 로깅, 트랜잭션과 같이 비즈니스 로직은 아니지만 반드시 처리가 필요한 부분을 별도로
             분리하여 프로그래밍하는 방식을 의미합니다. 
             이를통해, 코드의 중복을 없애 유지보수 비용을 최소화 할 수 있습니다.
@@ -558,10 +586,10 @@
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            servlet은 서버쪽에서 실행되며, 클라이언트의 요청에 따라 동적으로 서비스를 제공하는 자바 클래스입니다.
+            servlet은 클라이언트의 요청에 따라 동적으로 서비스를 제공하는 자바 클래스입니다.
             servlet은 일반 자바 클래스와 달리 Servlet container 내에서만 실행됩니다.
-            servlet container는 servlet의 생명주기를 관리하고 요청에 맞는 스레드를 생성합니다.
-            servlet container는 client에게 요청을 받아 servlet을 실행시키고 결과를 client에게 전달해주는 기능을 가진 컴포넌트입니다.
+            servlet container는 client에게 요청을 받아 스레드를 생성하여 servlet을 실행시키고 결과를 client에게 
+            전달해주는 기능을 가진 컴포넌트입니다.
             대표적인 servlet container로는 tomcat이 있습니다.
         </p>
     </div>
@@ -582,7 +610,7 @@
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            bean을 생성하고 관리하면서 의존관계를 연결해 주는 역할 수행하는 스프링의 핵심 객체 입니다.
+            bean을 생성하고 관리하면서 의존관계를 연결해 주는 역할을 수행하는 스프링의 핵심 객체 입니다.
         </p>
     </div>
 </details>
@@ -618,7 +646,7 @@
             먼저 톰캣이 실행됩니다.
             다음으로, application context 즉, spring container가 생성됩니다.
             다음으로, 스프링 bean들이 spring container에 생성됩니다.
-            다음으로, bean들의 의존관계가 주입됩니다.
+            다음으로, spring container내 bean들의 의존관계가 주입됩니다.
         </p>
     </div>
 </details>
@@ -642,7 +670,7 @@
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            각 스레드마다 갖는 독립적인 지역변수를 말합니다.
+            각 thread마다 갖는 독립적인 지역변수를 말합니다.
             스프링은 bean을 싱글톤으로 관리하기 때문에 공유 필드로 상태값을 가질 시 
             멀티쓰레드 환경에서 큰 장애가 발생할 수 있습니다. 이럴 때 사용할 수 있는 것이 threadLocal 입니다.
             다만, 스프링에서는 thread 또한 thread pool에 저장되는 공유자원이기 때문에 하나의 요청이 끝나는 시점에
@@ -656,10 +684,10 @@
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            MVC는 기본적으로 Model View Controller의 약자로 프로그램 개발 시 세가지 역할로 구분하여 개발하는 방법론입니다.
+            spring mvc는 spring에서 mvc 개발을 편리하게 하기위해 spring 에서 제공하는 프로젝트 입니다.
+            MVC는 Model View Controller의 약자로 프로그램 개발 시 세가지 역할로 구분하여 개발하는 방법론입니다.
             이를 사용하는 이유는 완벽한 분업화를 통해 해당 역할의 개발자가 자신의 역할에만 집중하여 개발하기 위함입니다.
             이를 통해 유지보수 비용을 최소화 시킬 수 있습니다.
-            그리고 spring mvc는 spring에서 mvc 개발을 편리하게 하기위해 spring 에서 제공하는 프로젝트
         </p>
     </div>
 </details>
@@ -671,7 +699,7 @@
         <p>
             DispatcherServlet은 Spring에서 사용되는 프론트 컨트롤러 입니다.
             DispatcherServlet은 Bean으로 등록되어 client의 요청이 controller로 가기전에 먼저, 
-            package를 scan하고 @Controller, @RestController을 확인하여 적절한 Handler Method에 위임해주는 역할을 수행합니다.
+            package를 scan하고 @Controller, @RestController를 확인하여 적절한 Handler Method에 위임해주는 역할을 수행합니다.
         </p>
     </div>
 </details>
@@ -691,7 +719,7 @@
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            모두 client의 request를 가로챌 수 있는 기능들이나 동작시점에 차이가 있습니다.
+            모두 client의 request를 가로챌 수 있는 기능들이라는 공통점이 있지만, 동작시점에 차이가 있습니다.
             filter는 Dispatcher Servlet 영역에 들어가기 전 범위에서 수행됩니다.
             또한, filter는 스프링 컨텍스트 이전에 실행되어 스프링과 무관합니다.
             일반적으로 인코딩 변환 처리, XSS 방어를 기능을 수행할 때 사용됩니다.
@@ -701,92 +729,6 @@
             주로 로그인 체크, 권한체크, 프로그램 실행시간 계산작업 로그확인 등에 사용됩니다.
             AOP Controller 처리 이후, 비지니스 로직 수행 전에 동작합니다.
             로깅, 트랜잭션, 캐싱 기능 등을 주로 수행합니다.
-        </p>
-    </div>
-</details>
-
-### Q. spring boot security에 대해 설명해주세요.
-<details>
-    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
-    <div>
-        <p>
-            인증, 권한 처리를 편리하게 관리하도록 도와주는 spring 프로젝트 입니다.
-            이로 인해, 보안 문제는 Spring Boot Security에 맡겨 두고 핵심 비즈니스 로직에 집중할 수 있었습니다.
-        </p>
-    </div>
-</details>
-
-### Q. JPA에 대해서 설명해주세요.
-<details>
-    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
-    <div>
-        <p>
-            자바진영의 ORM 기술 표준, 인터페이스 입니다.
-            SQL에 의존되는 개발을 피할수 있도록 도와줍니다.
-            ORM은 객체와 관계형 데이터베이스를 매핑한다는 뜻입니다.
-            ORM은 Object Relation Mapping의 약자로, 객체와 관계형 데이터베이스의 패러다임 불일치 문제를 개발자 대신 해결해줍니다.
-            가령, RDBMS의 컬럼값으로는 list등 다른 구조를 포함할 수 없는 반면, 메모리 내 데이터 구조에서는 이런 제약이 없어 훨씬 복잡한 구조를 사용합니다. 
-            그 결과 복잡한 메모리 내 데이터 구조를 데이터베이스에 저장하려면 먼저 관계형 표현으로 변환해야 하는데 애때, ORM은
-            개발자의 별도 코드없이 이를 대신 매핑해줍니다.
-        </p>
-    </div>
-</details>
-
-### Q. Spring data JPA에 대해서 설명해주세요.
-<details>
-    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
-    <div>
-        <p>
-            Spring에서 JPA를 쉽게 사용할 수 있도록 도와주는 Spring project입니다.
-            기본적인 CRUD를 메서드로 제공해주기 때문에 쉽고 빠르게 개발하는데 도움이 되어 생산성을 높일 수 있습니다.
-        </p>
-    </div>
-</details>
-
-### Q. JPA에서 영속성 컨텍스트가 무엇인가요?
-<details>
-    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
-    <div>
-        <p>
-            엔티티를 영구 저장하는 환경이라는 의미입니다.
-            애플리케이션과 DB 사이에서 엔티티를 보관하는 가상의 DB같은 역할을 할 수 있습니다.
-            영속성 컨텍스트에 저장된 영속상태의 엔티티들은 플러시 시점에 DB에 반영되는데,
-            일반적으로 트랜잭션을 커밋할 때 영속성 컨텍스트가 플러시 됩니다.
-            이를통해 캐시, 쓰기 지연, 변경 감지(영속성 컨텍스트가 관리하는 영속 상태의 엔티티에만 적용됨), 
-            지연로딩(실제 객체대신 프록시 객체를 로딩해두고 해당 객체를 실제 사용할 때 영속성 컨텍스트를 통해 데이터를 불러오는 방법)
-            의 기능을 수행할 수 있습니다.
-        </p>
-    </div>
-</details>
-
-### Q. N+1 문제가 무엇인가요?
-<details>
-    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
-    <div>
-        <p>
-            특정 객체와 연관된 객체를 조회할 때 쿼리가 특정 객체의 수만큼 더 발생하는 문제입니다.
-            실제 프로젝트를 진행하면서 N+1 문제가 발생했던 경험이 있습니다.
-            상품 테이블과 상품 할인 테이블이 1:N 관계를 갖는 상황에서 상품 데이터를 조회한 후 그와 연관된 상품 할인
-            데이터를 조회한 결과, 상품 데이터의 수만큼의 쿼리가 더 발생했습니다.
-            이를 해결하기 위해 특정 연관된 엔티티를 SQL 조인을 사용해서 함께 조회하는 fetch join 방식과 연관된 엔티티를 조회할 때 지정한 size만큼 IN절을 사용해 조회하는 
-            BatchSize 방식을 고민하였습니다.
-            그러나 fetch join은 paging 쿼리를 작성할 수 없다는 제한이 있어 BatchSize 방식을 통해 N+1문제를 해결하였습니다.
-        </p>
-    </div>
-</details>
-
-### Q. Spring boot batch가 무엇인가요?
-<details>
-    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
-    <div>
-        <p>
-            스프링 진영에서 배치기능을 쉽게 개발하기 위해 지원하는 프로젝트 입니다.
-            실제 프로젝트에서 상품 구매 카운트 데이터를 다루기 위해 spring batch를 사용했습니다.
-            처음에는 모든 step을 tasklet으로 개발하였는데, tasklet의 경우 paging 단위의 조회를 지원하지 않았고
-            chunk size 기준 commit interval 기능도 지원하지 않았습니다.
-            이런이유 때문에, tasklet 구조를 read,process,write 구조로 바꿨습니다.
-            그런다음, JpaPagingItemReder를 통해 paging 처리하였고 chunk size도 page size와 동일하게 설정하여
-            보다 더 안정적인 batch application 환경을 구축했습니다.
         </p>
     </div>
 </details>
@@ -819,6 +761,92 @@
             CGLIB은 인터페이스만 가능했던 dynamic proxy와는 달리 클래스에 대한 Proxy가 가능합니다.
             CGLIB Proxy는 Target Class를 상속받아 생성됩니다.
             스프링 부트에서는 런타임에 프록시 생성 시 기본적으로 CGLIB 방식을 이용합니다.
+        </p>
+    </div>
+</details>
+
+### Q. spring boot security에 대해 설명해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            인증, 권한 처리를 편리하게 관리하도록 도와주는 spring 프로젝트 입니다.
+            이로 인해, 보안 문제는 Spring Boot Security에 맡겨 두고 핵심 비즈니스 로직에 집중할 수 있었습니다.
+        </p>
+    </div>
+</details>
+
+### Q. JPA에 대해서 설명해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            자바진영의 ORM 기술 표준, 인터페이스 입니다.
+            SQL에 의존되는 개발을 피할수 있도록 도와줍니다.
+            ORM은 객체와 관계형 데이터베이스를 매핑한다는 뜻입니다.
+            ORM은 Object Relation Mapping의 약자로, 객체와 관계형 데이터베이스의 패러다임 불일치 문제를 개발자 대신 해결해줍니다.
+            가령, RDBMS의 컬럼값으로는 list등 다른 구조를 포함할 수 없는 반면, 메모리 내 데이터 구조에서는 이런 제약이 없어 훨씬 복잡한 구조를 사용합니다. 
+            그 결과 복잡한 메모리 내 데이터 구조를 데이터베이스에 저장하려면 먼저 관계형 표현으로 변환해야 하는데 
+            이때, ORM은 개발자의 별도 코드없이 이를 대신 매핑해줍니다.
+        </p>
+    </div>
+</details>
+
+### Q. Spring data JPA에 대해서 설명해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            Spring에서 JPA를 쉽게 사용할 수 있도록 도와주는 Spring project입니다.
+            기본적인 CRUD를 메서드로 제공해주기 때문에 쉽고 빠르게 개발하는데 도움이 되어 생산성을 높일 수 있습니다.
+        </p>
+    </div>
+</details>
+
+### Q. JPA에서 영속성 컨텍스트가 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            엔티티를 영구 저장하는 환경이라는 의미입니다.
+            애플리케이션과 DB 사이에서 엔티티를 보관하는 가상의 DB 역할을 수행합니다.
+            영속성 컨텍스트에 저장된 영속상태의 엔티티들은 플러시 시점에 DB에 반영되는데,
+            일반적으로 트랜잭션을 커밋할 때 영속성 컨텍스트가 플러시 됩니다.
+            이를통해 캐시, 쓰기 지연, 변경 감지(영속성 컨텍스트가 관리하는 영속 상태의 엔티티에만 적용됨), 
+            지연로딩(실제 객체대신 프록시 객체를 로딩해두고 해당 객체를 실제 사용할 때 영속성 컨텍스트를 통해 데이터를 불러오는 방법)
+            의 기능을 수행할 수 있습니다.
+        </p>
+    </div>
+</details>
+
+### Q. N+1 문제가 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            특정 객체와 연관된 객체를 조회할 때 쿼리가 특정 객체의 수만큼 더 발생하는 문제입니다.
+            실제 프로젝트를 진행하면서 N+1 문제가 발생했던 경험이 있습니다.
+            상품 테이블과 상품 할인 테이블이 1:N 관계를 갖는 상황에서 상품 데이터를 조회한 후 그와 연관된 상품 할인
+            데이터를 조회한 결과, 상품 데이터의 수만큼의 쿼리가 더 발생했습니다.
+            이를 해결하기 위해 특정 연관된 엔티티를 SQL 조인을 사용해서 함께 조회하는 fetch join 방식과 연관된 엔티티를 
+            조회할 때 지정한 size만큼 IN절을 사용해 조회하는 BatchSize 방식을 고민하였습니다.
+            그러나 fetch join은 paging 쿼리를 작성할 수 없다는 제한이 있어 BatchSize 방식을 통해 N+1문제를 해결하였습니다.
+        </p>
+    </div>
+</details>
+
+### Q. Spring boot batch가 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            스프링 진영에서 배치기능을 쉽게 개발하기 위해 지원하는 프로젝트 입니다.
+            실제 프로젝트에서 상품 구매 카운트 데이터를 다루기 위해 spring batch를 사용했습니다.
+            처음에는 모든 step을 tasklet으로 개발하였는데, tasklet의 경우 paging 단위의 조회를 지원하지 않았고
+            chunk size 기준 commit interval 기능도 지원하지 않았습니다.
+            이런이유 때문에, tasklet 구조를 read,process,write 구조로 바꿨습니다.
+            그런다음, JpaPagingItemReder를 통해 paging 처리하였고 chunk size도 page size와 동일하게 설정하여
+            보다 더 안정적인 batch application 환경을 구축했습니다.
         </p>
     </div>
 </details>
@@ -888,7 +916,7 @@
     </div>
 </details>
 
-### Q. redirect의 forward 차이에 대해서 설명해주세요.
+### Q. redirect와 forward 차이에 대해서 설명해주세요.
 <details>
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
@@ -899,7 +927,6 @@
             forward 클라이언트가 요청을 보냈을 때 서버 쪽에서 혼자 처리하는 것이 아니라 또 다른 서버에게 일을 넘기는 것입니다.
             그렇기 때문에 웹 브라우저에는 최초에 호출한 URL이 표시되며 이동한 페이지의 URL 정보는 볼 수 없습니다.
             요청했던 URL이나 request,response 객체를 재사용하거나 공유해야한다면 Forward를 사용하는 것이 좋습니다.
-            (전화예시)
         </p>
     </div>
 </details>
@@ -955,7 +982,19 @@
     <div>
         <p>
             optimizer는 인덱스의 유무, 데이터 분산 또는 편향 정도 등의 통계정보를 참고하여 여러 실행계획을 작성하고
-            이들의 비용을 연산한 후, 가장 낮은 비용을 가진 실행계획을 선택하는 DBMS의 핵심엔진 입니다.
+            이들의 비용을 연산한 후, 최적화된 실행계획을 수립하는 DBMS의 핵심엔진 입니다.
+        </p>
+    </div>
+</details>
+
+### Q. 스토리지 엔진은 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            디스크에서 데이터를 어떻게 가져오고 어떻게 최적으로 저장할 것인지 결정하는 역할을 수행하는
+            DBMS의 component 입니다.
+            Mysql의 스토리지 엔진은 innoDB 입니다.
         </p>
     </div>
 </details>
@@ -989,6 +1028,7 @@
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
+            트랜잭션은 여러 쿼리들을 논리적으로 하나의 작업으로 묶어주는 것을 의미합니다.
             쪼개질 수 없는 작업수행의 논리적 단위를 트랜잭션이라고 합니다.
             데이터의 정합성을 위해 사용하며 원자성(Atomicity), 일관성(Consistency), 고립성(Isolation), 지속성(Durability)의 4가지 특성을 갖습니다.
             원자성(Atomicity)은 트랜잭션은 DB에 모두 반영되거나, 전혀 반영되지 않아야 한다는 특성입니다.
@@ -1026,23 +1066,54 @@
             이러한 격리 수준으로 READ-UNCOMMITTED, READ-COMMITED, REPEATABLE-READ, SERIALIZABLE 총 4가지 level이 있습니다.
             READ-UNCOMMITTED는 커밋 전의 트랜잭션의 데이터 변경 내용을 다른 트랜잭션이 읽는 것 허용합니다.
             여기서는 dirty read, non-repeatable read, panthom read 발생할 수 있습니다.
-            READ-COMMITTED는 커밋이 적용된 데이터만 다른 트랜잭션에서 조회 가능합니다.
-            커밋이 반영되지 않은 데이터에 다른 트랜잭션이 접근할 수 없습니다.
+            dirty read는 이전 트랜잭션에 의해 수정된 됐지만 아직 커밋되지 않은 데이터를 이후 트랜잭션에서 읽는 것을 말합니다. 
+            이 상황에서 이전 트랜잭션이 롤백된다면 이후 트랜잭션에서 읽은 데이터는 비일관된 상태에 놓여 문제가 발생할 수 있습니다.
+            READ-COMMITTED는 커밋이 적용된 변경 데이터만 다른 트랜잭션에서 조회 가능합니다.
+            커밋이 반영되지 않은 변경 데이터에는 다른 트랜잭션이 접근할 수 없습니다.
             여기서는 non-repeatable read와 panthom read가 발생할 수 있습니다.
+            non-repeatable read는 한 트랜잭션 내에서 select 결과가 다르게 나오는 데이터 불일치 문제를 말합니다.
             REPEATABLE-READ는 트랜잭션 범위 내에서 조회한 내용이 항상 동일함을 보장합니다.
+            한 트랜잭션이 조회한 데이터는 트랜잭션이 종료될 때까지 다른 트랜잭션이 변경하거나 삭제할 수 없는 격리 수준입니다.
             여기서는 panthom read가 발생할 수 있습니다.
+            phantom read는 non-repeatable read의 한 종류로 해당 쿼리 결과에 행이 추가로 읽히는 문제를 말합니다.
             SERIALIZABLE은 한 트랜잭션에서 사용하는 데이터를 다른 트랜잭션에서 접근 불가합니다.
             트랜잭션의 ACID 성질이 모두 엄격하게 지켜지는 level이나 성능저하의 문제가 발생합니다.
         </p>
     </div>
 </details>
 
-### Q. mysql의 join의 종류와 각각을 설명해주세요
+### Q. mysql의 join의 종류와 각각을 설명해주세요.
 <details>
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            
+           inner, left outer, full outer join이 있습니다.
+           inner join은 A테이블과 B테이블이 공통으로 가진 데이터를 조회하는 join 입니다.
+           left outer join은 A테이블의 데이터와 A,B 테이블의 공통 데이터를 조회하는 join 입니다.
+           full outer join은 A테이블의 데이터와 B테이블의 데이터 그리고 A,B 테이블의 공통 데이터를 조회하는 join 입니다. 
+        </p>
+    </div>
+</details>
+
+### Q. User table에서 pk를 1부터 증가하는 auto_Increment로 설정했을 때 장단점을 설명해주세요. 
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            순차적으로 row가 생성되는 것을 알 수 있다는 장점이 있습니다.
+            다만, 유저의 규모가 추측이 가능하고 데이터의 규모가 커졌을 때 불리할 수 있습니다.
+            왜냐하면, pk를 기준으로 샤딩 시 부하가 한쪽으로 치우쳐질 수 있고 그로인해 특정 샤드에 부하가
+            몰릴 수 있어 샤딩한 의미가 없게 될 수 있습니다. 
+        </p>
+    </div>
+</details>
+
+### Q. MYSQL에서 PK조회 성능은 무엇인가요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            O(logN) 입니다.
         </p>
     </div>
 </details>
@@ -1054,26 +1125,6 @@
         <p>
             샤딩이란 대량의 데이터를 분산 처리하기 위해 데이터베이스 테이블을 분할하여 물리적으로 서로 다른곳에 분산하여 저장하는 것을 말합니다.
             샤딩키를 기준으로 데이터가 분산되며, 샤딩키를 잘 지정하여 데이터가 한쪽 샤드로 몰리게 하는것을 막는 것이 중요합니다.
-        </p>
-    </div>
-</details>
-
-### Q. 클러스터링 인덱스, 넌클러스터링 인덱스에 대해 아시나요?
-<details>
-    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
-    <div>
-        <p>
-            
-        </p>
-    </div>
-</details>
-
-### Q. ElasticSearch의 키워드 검색과 RDB의 %LIKE% 검색의 차이점이 뭘까요?
-<details>
-    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
-    <div>
-        <p>
-            
         </p>
     </div>
 </details>
@@ -1098,9 +1149,10 @@
             RDB 내에서는 기본적으로 분산처리, sharding/re-balancing, 데이터 복제/자동 복구와 같은 기능등을 제공하지 않습니다.
             물론, RDB 내에서 서드 파티 도구들로 위의 기능들을 수행할 수도 있겠지만, RDB로 이미 구성된 샤드 클러스터에 샤드를 추가하여 re-balancing 작업을
             수행한다던지, 로드를 분산시키는 작업들은 많은 노력과 고민이 필요할 수 있습니다.
-            반면, 대부분의 NoSQL은 내부적으로 분산처리, sharding/re-balancing, replica 등의 기능을 제공합니다.
+            반면, 대부분의 일반적인 NoSQL은 내부적으로 분산처리, sharding/re-balancing, replica 등의 기능을 제공합니다.
             그러므로, 엄청난 양이 생성되지만 한번 저장되고 난 뒤에는 수정될 일이 거의 없어
-            데이터의 일관성을 보장할 필요가 없는 가령, read/write만 수행하는 로그 같은 데이터를 처리한다면, NoSQL은 좋은 대안이 될 수 있습니다.
+            데이터의 일관성을 보장할 필요가 없는 가령, read/write만 수행하는 로그 같은 데이터를 처리한다면, 
+            NoSQL은 좋은 대안이 될 수 있습니다.
         </p>
     </div>
 </details>
@@ -1111,7 +1163,6 @@
     <div>
         <p>
             몽고디비는 schema-less한 document 형식의 데이터를 다루는 NoSQL database입니다.
-            몽고디비는 자체적으로 분산 처리, sharding/re-balancing, replica 기능을 제공합니다.
         </p>
     </div>
 </details>
@@ -1122,11 +1173,9 @@
     <div>
         <p>
             몽고디비의 document는 schema-less 하기 때문에 유연한 동적 데이터 저장이 가능하다는 장점이 있습니다.
-            또한, secondary-index를 지원하여 많은 index를 설정할 수 있고, composite-index를 지원합니다.
-            composite-index란 document 내의 여러 개의 key를 조합한 index인데 composite-index의 순서에 맞게 조회 조건을
-            걸어주면 index-scan을 할 수 있어 높은 성능의 read가 가능합니다.
-            ######### 여기부터 다시
-            또한, Mongo는 Write시에 가상메모리 주소 공간에 데이터를 적재하여 
+            또한, secondary-index를 지원하여 많은 index를 설정할 수 있고, compound-index를 지원합니다.
+            compound-index란 document 내의 여러 개의 field를 조합한 index인데 compound-index로 지정한 field의 순서에 맞게 조회 조건을
+            걸어주면 index-scan을 할 수 있어 일반적으로, 높은 성능의 read가 가능합니다.
             또한, 기본적으로 Replication을 통한 High Availability를 제공하며 Auto-Sharding을 통한 높은 확장성을 제공합니다.
         </p>
     </div>
@@ -1138,14 +1187,12 @@
     <div>
         <p>
             메모리 사용량이 크며 메모리 양에 따라 성능이 좌지우지 됩니다.
-            Memory Mapped(데이터 쓰기 시에 OS의 가상 메모리에 데이터를 넣은 후 비동기로 디스크에 기록하는 방식)를 사용하기 때문에 방대한 
-            데이터를 빠르게 처리할 수 있습니다. 
-            하지만 OS의 메모리를 활용하는 만큼, 메모리가 가득 찰 시 page fault가 발생하고 page fault가 발생하면, page를 memory와 disk 사이에 switching하는 현상이 일어나기 때문에,
-            disk IO가 발생하고, 성능 저하를 유발하게 됩니다.
-            몽고디비의 단점은 key 값이 같이 메모리에 로딩된다는 단점이 있다.
-            또한 특정 key에 해당하는 데이터를 10000개를 넣을 경우, DB에는 10000번의 "birthday"가 함께 저장됩니다.
-            중복된 key값이 계속 들어가기 때문에, 비효율적인 저장이 될 수 밖에 없다는 단점이 있습니다.
-            ({birthday:19920101} {birthday:19000202} {birthday: 18880303})
+            메모리가 가득 찰 시 page fault가 발생하고 page fault가 발생하면, page를 memory와 disk 사이에 switching하는 
+            현상이 일어나기 때문에, disk IO가 발생하고, 성능 저하를 유발하게 됩니다.
+            또한, MongoDB는 데이터 write 시 document의 field가 같이 write되어 비효율적으로 데이터가 저장된다는 단점이 있습니다.
+            예를들어, name 이라는 field를 가진 document가 10000개 write된다고 가정한다면 name이라는 field가 10000번 중복되어
+            저장됩니다. 이처럼 mongodb는 동일 field를 같는 document 저장 시 비효율적인 저장이 될 수 밖에 없다는 단점이 있습니다.
+            'ex) ({birthday:19920101} {birthday:19000202} {birthday: 18880303})'
         </p>
     </div>
 </details>
@@ -1167,8 +1214,33 @@
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            최소 3개 이상으로 이루어져 있습니다.
-            ...
+           레플리카셋은 홀수 멤버로 유지하는 것이 좋습니다.
+           그 이유는 동일 high-availability 수준을 유지하는데 필요한 멤버의 수가 홀수일 때보다 짝수일 때 더 많이 필요하기 때문입니다.
+           예를 들어, 4대로 구성된 레플리카 셋은 두개의 멤버에 장애가 발생하면 프라이머리를 선출하지 못하는데 
+           3대로 구성된 레플리카 셋도 마찬가지로 두개의 멤버에 장애가 발생하면 프라이머리를 선출하지 못하기 때문입니다.
+           그래서 만약에 짝수 멤버가 필요한 경우라면 아비터를 투입해서 투표 가능 멤버는 홀수가 하는데 좋습니다.
+        </p>
+    </div>
+</details>
+
+### Q. ElasticSearch의 키워드 검색과 RDB의 %LIKE% 검색의 차이점이 뭘까요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            elasticsearch는 inverted index 방식으로 데이터를 저장하기 때문에 O(1) 만에 특정 키워드 검색이
+            가능합니다. 하지만 RDB의 LIKE는 문자열 전체를 탐색해야 하기 때문에 특정 row에서 특정 키워드를 찾아내는데 
+            O(N)의 시간이 걸립니다.
+        </p>
+    </div>
+</details>
+
+### Q. 클러스터링 인덱스, 넌클러스터링 인덱스에 대해 아시나요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            
         </p>
     </div>
 </details>
@@ -1263,7 +1335,15 @@
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            
+            프로세스 전체가 메모리 내에 로딩되지 않더라도 실행이 가능하도록 하는 기법을 말한다.
+            즉, 프로그램이 CPU에 의해 실제로 사용되는 부분만 메모리로 로드하고, 사용되지 않는 부분은 디스크로 옮겨서 물리 
+            메모리를 대체하도록 하는 것을 말합니다.
+            가상 메모리로 저장되는 영역을 스왑영역이라 하며, 프로세스를 쪼갠 단위를 페이지 라고 합니다.
+            또한, 필요한 페이지만 물리 메모리에 올리는 것을 Demanding Paging(요구 페이징) 이라고 합니다.
+            그리고, 물리 메모리가 가득 찬 상황에서 swap 영역의 페이지를 요구하는 상황을 가리켜 페이지 부재라고 하며,
+            이때, 물리 메모리에 로딩된 페이지를 가상 메모리의 swap 영역으로 옮기는 작업을 swap out 이라고 합니다.
+            페이지 부재 발생 시 어떤 페이지를 swap out 할 것인지 결정하는 알고리즘을 페이지 교체 알고리즘 이라고 하며,
+            대표적으로 FIFO, LRU 등이 있습니다.
         </p>
     </div>
 </details>
@@ -1399,7 +1479,7 @@
     </div>
 </details>
 
-### Q. TCP (Transfer Congrol Protocol)에 대해 설명해주세요.
+### Q. TCP (Transfer Control Protocol)에 대해 설명해주세요.
 <details>
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
@@ -1510,7 +1590,7 @@
     </div>
 </details>
 
-### Q. 로드밸런싱 알고리즘아시는 거 설명해주세요.
+### Q. 로드밸런싱 알고리즘 아시는 거 설명해주세요.
 <details>
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
@@ -1647,7 +1727,7 @@
     <div>
         <p>
             개인적으로 스프링 부트를 이용해 쇼핑몰 서비스를 제공하는 프로젝트를 개발하였습니다. 
-            또한,서비스를 개발하는 것으로 끝내는 것이 아니라 내가 만든 서비스에 대해 어떻게 하면 성능과 안정성을
+            또한, 서비스를 개발하는 것으로 끝내는 것이 아니라 내가 만든 서비스에 대해 어떻게 하면 성능과 안정성을
             더 높일 수 있을 지에 대해 주도적으로 고민하였습니다. 결과적으로, 스프링 단일 서버 기준 약 900tps 까지 처리
             하는 서비스를 구축하였고, cloud 환경에서 auto scale out 할 수 있는 architecture를 구축하여 초당 
             수만 건의 요청도 처리할 수 있는 환경을 구축했습니다. 
@@ -1794,6 +1874,33 @@
                 그래서, application을 띄울 서버의 사양을 높였고 이를통해, 메모리 부족 문제를 해결했습니다.
             </p>
         </div>
+    </div>
+</details>
+
+### TDD가 뭔지 아시나요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            말그대로 테스트가 주도하는 개발 방법론을 의미합니다.
+            TDD는 먼저 요구되는 새로운 기능에 대한 테스트를 작성하고 
+            해당 테스트를 통과하는 가장 간단한 코드를 작성합니다.
+            그리고 테스트가 통과되면 해당 코드를 리팩토링 하는 과정을 수행합니다.
+            TDD를 행함으로써 개발하고 있는 코드의 문제점을 빠르게 잡아낼 수 있어 디버깅 시간을 줄일 수 있다는 장점이 있습니다.
+            다만, 코딩량이 늘어나면서 생산성의 관점에서는 의문점이 발생할 수 있다는 단점이 있습니다.
+        </p>
+    </div>
+</details>
+
+### 단위 테스트를 왜 작성해야 할까요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            단위테스트는 개발단계 초기에 버그를 발견할 수 있게 도와줍니다.
+            또한, 단위 테스트는 개발자가 나중에 코드를 리팩토링하거나 라이브러리를 업그레이드 시킬 때
+            기존 기능이 올바르게 동작하는지를 보장해줍니다.
+        </p>
     </div>
 </details>
 
