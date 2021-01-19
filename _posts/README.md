@@ -2163,7 +2163,6 @@
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            개발자로서 성장 가능성이 있는 회사가 좋은 회사라고 생각합니다.
             
         </p>
     </div>
