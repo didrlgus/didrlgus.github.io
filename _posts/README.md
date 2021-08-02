@@ -510,6 +510,20 @@
     </div>
 </details>
 
+### Q. Primitive type vs Reference type
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            Primitive type은 자바에서 기본적으로 제공하는 기본 타입이며, 총 8가지가 있습니다.
+            Primitive type의 변수 내에는 값자체가 할당됩니다.
+            Reference type은 Primitive type을 제외한 모든 타입이며, 자바에서 기본적으로 제공해주는 타입도 있고, 개발자가 직접 만들어 사용하는 타입도 있습니다.
+            Reference type의 변수 내에는 실제 값이 저장된 메모리 공간을 참조 할 수 있는 참조값이 할당됩니다.
+            또한, Reference type을 이용해 객체를 생성할 수 있으며, 생성된 객체는 Heap 영역에 저장됩니다.
+        </p>
+    </div>
+</details>
+
 # Spring
 
 ### Q. 스프링이 무엇인가요?
