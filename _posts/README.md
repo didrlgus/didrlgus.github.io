@@ -524,6 +524,22 @@
     </div>
 </details>
 
+### Q. System.out.println()를 절대 쓰지 말라고 하는데 이유가 무엇일까요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            일반적으로 애플리케이션에 로그를 찍을 때, System.out.println()을 사용하는 것보다는 Logback, Log4J 등의 라이브러리를 사용하는 것을 권장합니다.
+            그 이유는 로깅 라이브러리를 이용하면 쓰레드 정보, 클래스 이름 같은 부가 정보를 함께 볼 수 있기 때문입니다.
+            또한, System.out.println()과는 다르게 로깅 라이브러리를 이용하면, 로그 레벨에 따라 개발 서버에서는 모든 로그를 출력하고, 운영서버에서는 출력하지 않는 등 로그를 상황에 맞게 조절할 수 있습니다.
+            그리고 System.out.println()은 로그가 시스템 아웃 콘솔에만 출력되는데 반해, 로깅 라이브러리를 이용하면 로그를 별도의 파일로도 남길 수 있습니다.
+            특히 파일로 로그를 남길 때는 날짜별 혹은 용량에 따라 로그를 분할하는 것도 가능합니다.
+            성능적으로도 System.out.println()는 좋지 않습니다. 왜냐하면, System.out.println()에는 내부적으로 멀티쓰레드 환경에서 thread safe를 보장하기 위한 synchronized를 이용하기 때문입니다.
+            그래서 실무에서는 System.out.println() 보다는 꼭 로깅 라이브러리를 이용해 로그를 남겨야 합니다.
+        </p>
+    </div>
+</details>
+
 # Spring
 
 ### Q. 스프링이 무엇인가요?
