@@ -573,6 +573,17 @@
     </div>
 </details>
 
+### Q. 실무에서 final을 붙이는 이유는?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            버그가 발생할 수 있는 가능성을 사전에 없애기 위해서 사용합니다.
+            특히나, 멀티쓰레드나 함수형프로그램이에서 발생할 수 있는 의도치 않는 동작을 사전에 명시적으로 막을 수 있어 final의 가치가 더더욱 중요해진다.
+        </p>
+    </div>
+</details>
+
 # Spring
 
 ### Q. 스프링이 무엇인가요?
