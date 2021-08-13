@@ -388,6 +388,28 @@
     </div>
 </details>
 
+### Q. Java 에서 제공하는 java.util.Stack 클래스는 디자인이 잘못되어, 보통의 엔터프라이즈 환경에서는 잘 사용하지 않는데요. 왜 그럴까요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            Stack class를 직접 까보면 가장 눈에 띄는 특징 2가지가 있습니다.
+            첫번째로, Vector라는 클래스를 상속받는다는 것입니다.
+            Vector는 ArrayList처럼 동적 배열 객체를 만들 때 사용되는 클래스 입니다.
+            근데, Stack은 Vector를 상속받으면서, LIFO 가 아닌 중간에 데이터를 삽입, 삭제하는 연산도 가능해집니다.
+            이는 Stack의 본질을 깨버리는 설계가 되기 때문에 올바른 설계라고 볼 수 없습니다.
+            두번째로, Stack의 일부 메서드에서는 synchronized 키워드를 이용해 thread-safe를 보장 받습니다.
+            synchronized를 이용하면 완벽한 thread-safe를 보장받을 수 있지만, 성능적으로는 오버헤드가 큰 방식입니다.
+            그렇기 때문에, 엔터프라이즈 환경에서는 좋은 성능을 보장하지 못할 확률이 크고 이로인해, Stack은 좋은 선택이 아닐 가능성이 높습니다.
+            그렇다면, Java에서 LIFO 구조의 자료구조로는 어떤 것을 사용해야 할까요?
+            Stack 자체의 Java API 문서에서도 더 완벽한 LIFO 자료구조를 사용하려거든 Deque 인터페이스를 구현한 구현체인 ArrayDeque를 사용하라고 추천하고 있습니다.
+            ArrayDeque를 이용하면 thread-safe는 보장받을 수 없지만, Stack 보다 빠른 성능을 보장받을 수 있기 때문입니다.
+            만약, thread-safe를 꼭 보장받아야만 하는 상황이라면, synchronized를 이용하는 Stack보다는 ConcurrentLinkedDeque과 같은 lock-free한 자료구조를 사용하여 thread-safe를
+            보장받는 것이 성능상 유리할 것입니다.
+        </p>
+    </div>
+</details>
+
 ### Q. 제네릭에 대해서 설명해주세요.
 <details>
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
