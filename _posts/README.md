@@ -273,18 +273,20 @@
     </div>
 </details>
 
-### Q. equals()와 hashcode()가 뭘까요?
+### Q. equals()와 hashCode()가 뭘까요?
 <details>
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            equals()와 hashcode() 모두 Object 클래스에 정의된 메서드입니다.
+            equals()와 hashCode() 모두 Object 클래스에 정의된 메서드입니다.
             일반적으로 equals()는 객체의 내용이 동일한지 확인하는 동등성 비교를 위한 메서드입니다.
-            hashcode()는 해싱(hashing) 기법에 사용되는 해시함수(hash function)를 구현한 것이고 메모리 주소에 대한 해시값을 반환합니다.
-            HashMap, HashTable, HashSet, LinkedHashSet 등에서 key를 결정할때 hashcode()를 사용합니다. 
-            즉, 각 인스턴스의 hashCode()의 결과가 같다면 동일한 key로 간주합니다.
-            일반적으로 equals()가 true이면, 두 객체의 hashCode 값은 항상 같아야 한다는 규약이 있습니다.
-            다만, equals() 메소드가 false 라고해서 두 객체의  hashcode()값이 꼭 다를 필요는 없습니다.
+            hashCode()는 해싱(hashing) 기법에 사용되는 해시함수(hash function)를 구현한 것이고, 기본적으로 메모리 주소에 대한 해시값을 반환합니다.
+            만약, equals()를 재정의 한다면, hashCode() 또한 재정의 해야 합니다.
+            그렇지 않으면, hashcode() 값을 사용하는 Collection인 HashSet, HashMap, HashTable을 사용할 때 문제가 발생할 수 있습니다.
+            HashSet에서는 객체간의 중복여부를 파악할 때 hashCode()를 사용하고, HashMap과 HashTable에서는 key에 대한 해시값을 구할때 hashCode()를 사용하기 때문입니다.
+            즉, hashCode()로 인한 문제를 일으키지 않기 위해서는 재정의 한 equals()의 반환 값이 true 라면, 두 객체의 hashCode()도 마찬가지로 동일한 값을 반환시킬 수 있게 재정의 해야 합니다.
+            이와 반대로, equals()의 반환 값이 false 라고 하더라도, 두 객체의 hashcode()가 동일할 필요는 없습니다.
+            다만, equals() 값이 false인 객체들에 대해서는 서로 다른 hashCode() 값을 반환해야 해시테이블의 충돌을 최소화 시킬 수 있고 성능을 높일 수 있습니다.
         </p>
     </div>
 </details>
