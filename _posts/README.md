@@ -1487,8 +1487,8 @@
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            client/server 간의 통신을 위해 server 쪽에서 정해놓은 약속 입니다.
-            (음식점 주문 예)
+            API는 Application Programming Interface의 약자로, 애플리케이션에서 일종의 소프트웨어나 플랫폼에서 제공하는 서비스 혹은 기능에 접근하기 위한 수단 입니다.
+            즉, API는 누구나 쉽게 사용할 수 있도록 모듈화하여 만들어진, 특정 기능을 제공하는 인터페이스 입니다.
         </p>
     </div>
 </details>
