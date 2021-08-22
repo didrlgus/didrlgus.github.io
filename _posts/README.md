@@ -684,6 +684,22 @@
     </div>
 </details>
 
+### Q. Statement와 PreparedStatement의 차이에 대해 설명해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            Statement와 PreparedStatement는 모두 자바에서 DBMS에 쿼리를 요청하기 위해 사용되는 객체입니다.
+            DBMS에서는 쿼리를 수행시킬 때, 쿼리문장 분석 -> 컴파일 -> 실행계획 작성의 단계들을 거칩니다.
+            Statement는 쿼리를 수행할 때마다 위의 세단계를 매번 반복하는 방식으로 동작하고,
+            PreparedStatement는 위의 세단계를 초기에 한번만 수행하고 해당 결과로 얻은 실행계획을 캐시에 담아 재사용하는 방식으로 동작합니다.
+            PreparedStatement는 동일한 쿼리문에 대한 실행계획을 재사용하기 때문에, 컴파일 과정을 매번 수행할 필요가 없어, 동일한 쿼리문을 반복해서 수행해야 하는 상황이라면 성능적으로 장점을 가집니다.
+            또한 PreparedStatement는 Statement와는 달리 where 조건에 사용될 파리미터를 바인딩 받는 방식으로 작성되기 때문에, SQL injection을 방어할 수도 있다는 장점을 갖습니다.
+            그렇기 때문에, 일반적으로 PreparedStatment는 Statement보다 성능과 보안상 뛰어난 방식입니다.
+        </p>
+    </div>
+</details>
+
 # Spring
 
 ### Q. 스프링이 무엇인가요?
