@@ -700,6 +700,31 @@
     </div>
 </details>
 
+### Q. 트래픽이 무지많이 몰리는 이벤트가 예정되어있어, 트래픽이 많을때 young gen /old gen 비율은 어떻게 하는 것이 좋을까요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            트래픽이 많이 몰린다면 객체 생성도 그만큼 많이 될 것입니다.
+            다만, 이러한 많은 객체들 중 수명이 짧은 객체들이 대부분일 것으로 예상됩니다.
+            이러한 상황에서, young gen이 차지하는 비율이 작다면 그만큼 minor gc의 빈도가 늘어날 것이고, minor gc에 의해 발생하는 stop the world의 빈도가 많아져 성능에 악영향을 줄 것입니다.
+            그렇다면, minor gc에 의한 stop the world의 빈도 수를 줄이기 위해, young gen이 차지하는 비율을 높이면 어떻게 될까요?
+            minor gc에 의한 stop the world의 빈도수를 줄일 수 있지만, 해당 stop the world를 한번 수행할 때마다 그만큼 young gen에 객체가 많이 저장되기 때문에, 객체를 수거하는데 걸리는 시간은 이전보다 오래걸릴 것입니다.
+            시간이 적게 걸리지만 많이 수행하느냐 vs 시간이 오래걸리지만 한번만 수행하느냐에 대한 차이 입니다.
+            이 상황에서는 stop the world 빈도를 줄이는게 맞는 선택이라고 생각합니다.
+            stop the world는 gc를 동작시키는 thread를 제외한 나머지 모든 thread를 all stop 하는 작업이기 때문입니다.
+            하지만, young gen의 비율을 늘릴경우 old gen이 차지하는 비율은 상대적으로 작아져 old gen을 대상으로 하는 major gc의 빈도도 많아 질 것입니다.
+            결국, young gen을 대상으로 한 minor gc 의 빈도수 vs old gen을 대상으로한 major gc의 빈도 수 사이의 trade off가 발생하는 상황이라고 생각합니다.
+            다만, old gen은 young gen과 같이 eden이나 survivor space가 존재하는 게 아니기 때문에 메모리 단편화도 신경써야하고, 일반적으로 youn gen보다 더 많은 객체들을 관리하다 보니 major gc의 빈도가 높아지면 성능에 좋지 않은 역할을 줄 것은 분명합니다.
+            그렇기 때문에, old gen의 비율을 줄여가면서까지, minor gc의 빈도를 줄이기 위해 young gen의 비율을 높이는 것이 위험한 선택이 될 수 있을것이라 생각합니다.
+            결론적으로, 오직 트래픽이 많을것이라는 가정만을 가지고 young gen과 old gen의 최적화된 비율을 수치화 하기는 어렵지 않을까? 라고 생각합니다.
+            각 애플리케이션마다 저마다의 특징을 갖고있고, 애플리케이션을 동작시키는 환경도 제각각이어서, 여러가지 변수들이 존재할 것이기 때문입니다.
+            그렇기 때문에 각 애플리케이션마다 대용량 트래픽에 대한 성능 테스팅이나 모니터링 과정을 통해 young gen과 old gen에 대한 최적의 비율을 찾는 것이 중요할 것이라 생각합니다.
+        </p>
+    </div>
+</details>
+
+
 # Spring
 
 ### Q. 스프링이 무엇인가요?
