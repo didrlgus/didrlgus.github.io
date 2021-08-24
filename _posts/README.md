@@ -567,6 +567,20 @@
     </div>
 </details>
 
+### Q. java 8의 특징은 무엇이고 java8은 왜 중요할까요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            java8 에서는 람다, Funtional Interface, 스트림 API, java.time 패키지 추가, Optional, interface에서의 default 키워드 등등... 많은 변화가 있었습니다.
+            이중에서 가장 핵심이라고 생각되는 변화는 람다와 스트림 API를 이용해 함수형 프로그래밍이라는 새로운 프로그래밍 패러다임을 객체지향 프로그래밍인 Java에 접목시킨 것이라고 생각합니다.
+            방대한 데이터를 병렬적으로 빠르게 처리 하면서, 동시에 안정적으로 처리하는 것의 중요성이 높아짐에 따라 함수형 프로그래밍의 가치가 높아졌습니다.
+            함수형 프로그래밍을 잘 이용하면, 동시성에서 발생할 수 있는 side effect 없앨 수 있고, 멀티쓰레딩 환경에서 thread-safe를 보장하면서 안정적으로 병렬처리를 할 수 있기 때문입니다.
+            즉, java8이 중요한 이유는 함수형 프로그래밍이라는 새로운 프로그래밍 패러다임을 객체지향 프로그래밍인 Java에 접목시켰다는 아주 큰 변화가 있었던 버전이기 때문입니다.
+        </p>
+    </div>
+</details>
+
 ### Q. 쓰레드 세이프란?
 <details>
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
