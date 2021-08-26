@@ -98,6 +98,19 @@
     </div>
 </details>
 
+### Q. minor-gc 에서 발생하는 stw 와 major-gc, full-gc 에서 발생하는 stw 의 속도는 어떤 차이가 있을까요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            stw의 속도는 minor-gc가 가장 빠르고 그다음 major-gc 그다음 full-gc가 가장 느릴 것이라고 생각합니다.
+            일반적으로 major-gc의 대상인 old gen은 young gen보다  용량을 크게 잡고, 그렇기 때문에mark and sweep 작업을 할 객체의 수도 많아, major-gc에서의 gc 처리속도가 minor-gc에서의 gc 처리 속도보다 상대적으로 느릴 것입니다.
+            stw는 결국 gc과정이 시작되고 종료될 때까지 모든 쓰레드를 정지하는 과정이므로, stw 속도도 이와 비례할 것이라고 생각합니다.
+            full-gc는 minor-gc + major-gc인데, 마찬가지로 heap 내의 모든 객체를 대상으로 mark and sweep 작업을 수행해야 하기 때문에, gc를 하는데 시간이 오래걸릴 것이고, minor-gc나 major-gc 보다 stw의 속도가 느릴 것이라고 생각합니다.
+        </p>
+    </div>
+</details>
+
 ### Q. 객체지향이 무엇인가요?
 <details>
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
