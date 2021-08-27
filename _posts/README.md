@@ -1203,6 +1203,29 @@
     </div>
 </details>
 
+### Q. 네이버 쇼핑 플랫폼에서는 왜 Spring 의 WEB FLUX 를 사용하려는 걸까요? 무조건 WEB FLUX가 좋은 걸까요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            Spring MVC는 Servlet을 기반으로 동작하며, request당 thread가 하나씩 할당되어 요청을 처리하는 구조입니다.
+            또한, network I/O 또는 DB I/O 작업 수행 시 해당 작업이 끝날때까지 쓰레드가 대기하는 Blocking I/O 방식으로 동작합니다.
+            반면, Spring Webflux는 I/O 작업 수행 시, 해당 작업이 끝날때까지 쓰레드가 대기하지 않고 다른 작업을 수행하다가 I/O 작업이 끝나면 다시 이어서 작업을 수행하는 방식인 Non-Blocking I/O 방식으로 동작합니다.
+            그렇기 때문에 Spring Webflux를 이용하면 최소한의 자원으로 대량의 트래픽을 빠르게 처리할 수 있다는 장점이 있습니다.
+            그렇다면 무조건 WebFlux를 써야할까요?
+            그렇지는 않습니다.
+            만약, 트래픽이 적당히 발생하는 서비스라면, thread pool을 튜닝하는 것만으로도 충분히 좋은 성능을 보장받을 수 있을 것입니다.
+            또한, Blocking 방식의 코드를 짜는 것은 코드의 동작 과정을 디버깅하기 수월하며, 가독성도 더 좋습니다. 그리고 이는 유지보수 비용과 연결됩니다.
+            문제는 네이버 쇼핑 플랫폼 같은 적당하지 않은 트래픽이 발생하는 서비스일 경우입니다.
+            Core의 개수는 한정적이며, Thread는 메모리를 소모하는 자원이기 때문에 트래픽이 많이 발생하는 상황에서, 무한정 thread pool size를 늘리는 것에는 한계가 있습니다.
+            또한, 쓰레드가 많을수록 Core를 점유하기 위해 대기하고 있던 쓰레드와 Core를 점유하고 있던 쓰레드간의 Switching 작업인 Context Switching으로 인해 Core를 제대로 활용하지 못해 처리량이 저하될 가능성이 큽니다.
+            그렇기 때문에, 요청마다 쓰레드를 할당하고 Blocking I/O로 쓰레드를 병렬처리하는 방식으로는 대량의 트래픽을 처리하는데 한계가 생길 수 있습니다.
+            이러한 한계를 극복할 수 있는 방법이 Non-Blocking I/O를 이용하는 방식이며, Spring5 부터 Webflux라는 모듈을 통해 Non-Blocking I/O 방식의 프로그래밍을 할 수 있도록 지원하고 있습니다.
+            결론적으로, 트래픽이 상대적으로 적은 서비스에서는 Spring MVC를 사용해도 충분하지만, 트래픽이 감당하기 힘들정도로 많아질 경우에는 Spring Webflux를 사용하는 것이 자원과 성능 측면에서 유리합니다.
+        </p>
+    </div>
+</details>
+
 # Database
 
 ### Q. INDEX가 뭔가요?
