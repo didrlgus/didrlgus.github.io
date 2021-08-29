@@ -994,6 +994,10 @@
             인터셉터는 스프링 MVC의 시작점인 디스패처 서블릿과 컨트롤러 사이에서 컨트롤러 호출 직전에 호출 됩니다.
             즉, 필터와 인터셉터는 다음과 같은 호출 순서를 갖습니다.
             HTTP 요청 -> WAS -> 필터 -> (디스패처) 서블릿 -> 인터셉터 -> 컨트롤러
+            인터셈터와 필터는 각기 다른 Context의 기능을 갖기 때문에 예외를 처리하는데도 차이점을 갖습니다.
+            인터셉터에서 예외 발생 시 Spring Context내에서 동작하기 때문에 스프링에서 제공하는 ExceptionResolver를 통해 처리가 가능합니다.
+            그에반해, filter는 Web Application Context 즉, WAS내에서 동작하기 때문에, FilterChain 안에서 Exception 처리를 위한 Filter를 FilterChain 상위에 등록 하거나,
+            FilterChain 안에서 모든 예외를 DispatcherServlet 까지 흘려보내거나, 예외 발생 시 에러페이지를 정의해야 합니다.
             그렇다면, 이 둘은 얼핏 보면 비슷해 보이는데 언제 필터를 사용하고 언제 인터셉터를 사용하는게 좋을까요?
             필터의 경우 단순히 request, response 객체만 제공하지만, 인터셉터는 어떤 컨트롤러(handler)가 호출되는지에 대한 호출 정보도 제공 받을 수 있습니다.
             또한, 필터의 경우 단순하게 doFilter() 하나만 제공되는데 반해, 인터셉터는 컨트롤러 호출 전(preHandle), 호출 후(postHandle), 요청 완료 이후(afterCompletion)와 같이 단계적으로 잘 세분화 되어 있습니다.
