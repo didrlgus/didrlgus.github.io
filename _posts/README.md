@@ -993,6 +993,20 @@
     </div>
 </details>
 
+### Q. Spring framework 안에는 어떠한 디자인 패턴들이 적용돼있을가요? 간단한 사례와 함께 소개해 주실 수 있을까요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            Spring Framework에는 Proxy pattern, Strategy pattern, Singletone pattern, template method pattern, adapter pattern 등이 적용돼있습니다.
+            Proxy 패턴은 Spring AOP에서 JDK dynamic proxy, CGLIB을 통해 프록시 객체가 만들어져 사용될 때 적용돼있고, AOP를 사용하는 @Cachable, @Transactional 등이 적용된 코드 역시 프록시 패턴이 구현된 사례입니다.
+            Singleton 패턴은 Spring Container가 Bean의 생명주기를 관리하는 방법으로 주로 사용됩니다.
+            Template method 패턴은 Spring MVC의 핵심인 DispatcherServlet에 정의된 doService()가 호출되는 과정에서 적용돼있습니다.
+            Adapter 패턴은 DispatcherServlet에서 핸들러(컨트롤러)를 실행시키기 위한 핸들러 어댑터를 조회하는 과정에 적용돼있고, 이를 통해 다양한 핸들러를 유연하게 실행시킬 수 있습니다.
+        </p>
+    </div>
+</details>
+
 ### Q. spring mvc 동작 과정에 대해 말씀해주세요.
 <details>
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
