@@ -64,7 +64,7 @@ public class Singleton {
     
     // 접근 제한자가 private으로 설정된 생성자
     private Singleton() {
-	} 
+	  } 
     
     public static Singleton getInstance() { 
     	if (instance == null) {
@@ -117,7 +117,7 @@ public class Singleton {
     
     public static Singleton getInstance() {
         if (instance == null) {
-            synchronized (Singleton .class) {
+            synchronized (Singleton.class) {
                 if (instance == null) {
                     instance = new Singleton();
                 }
@@ -129,6 +129,14 @@ public class Singleton {
 ```
 
 * synchronized를 이용하는 방법에서 발생하는 성능 이슈를 최소화시키기 위해, 먼저 객체를 생성해야 하는지 확인하고(if문) 객체를 생성하는 경우에만 잠금을 획득하는 것으로 시작할 수 있다.
+* Singleton 객체에 volatile을 추가한 이유
+  * thread-A, thread-B가 있고 core가 2개 있다고 가정하자.
+  * thread-A에서 먼저 getInstance()를 호출하고 `instance = new Singleton();` 코드를 실행하고 lock을 반환한 상태라고 가정해보자.
+  * 이때, core가 가지고 있는 cache에만 instance 변수에 Singleton() 객체가 할당됐고, 실제 메모리상에는 instance 변수에 객체가 할당되지 않은 상태일 수 있다.
+  * 이러한 상황에서 thread-B가 getInstance()를 호출한다면 if (instance == null) 조건을 통과할 수 있다.
+  * 그렇기 때문에 객체가 2개 생길 수 있다.
+  * 즉, thread-B가 synchronized 내의 `if (instance == null)` 조건을 통과할 때, 실제 메모리 상에는 thread-A가 생성한 Singleton 인스턴스가 메모리상에 반영되지 않았을 수 있다.     
+  * 이러한 문제를 volatile을 사용하여 해결할 수 있다.
 
 ### 문제점
 * 코드가 장황해져 읽기 어렵게 만든다.
