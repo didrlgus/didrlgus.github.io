@@ -135,8 +135,12 @@ public class Singleton {
   * 이때, core가 가지고 있는 cache에만 instance 변수에 Singleton() 객체가 할당됐고, 실제 메모리상에는 instance 변수에 객체가 할당되지 않은 상태일 수 있다.
   * 이러한 상황에서 thread-B가 getInstance()를 호출한다면 if (instance == null) 조건을 통과할 수 있다.
   * 그렇기 때문에 객체가 2개 생길 수 있다.
-  * 즉, thread-B가 synchronized 내의 `if (instance == null)` 조건을 통과할 때, 실제 메모리 상에는 thread-A가 생성한 Singleton 인스턴스가 메모리상에 반영되지 않았을 수 있다.     
-  * 이러한 문제를 volatile을 사용하여 해결할 수 있다.
+  * 문제 상황을 정리하면 다음과 같다.
+    1. thread-A가 생성한 instance가 메인 메모리에 존재하지 않는 경우
+    2. thread-A가 생성한 instance가 메인 메모리에 존재하지만, thread-B를 점유하는 core의 cache에 존재하지 않는 경우
+  * 이러한 문제를 `volatile`을 사용하여 해결할 수 있다.
+  * 사실, 위와 같은 문제가 발생할 가능성은 굉장히 낮을 것으로 보이나 어쨋든 발생할 `가능성`이 있는 것이니, 꼭 volatile을 사용해 동기화 해야 한다.
+    * 가능성이 없는것과 있는 것은 천지차이다.
 
 ### 문제점
 * 코드가 장황해져 읽기 어렵게 만든다.
