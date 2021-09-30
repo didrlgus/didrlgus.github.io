@@ -2638,20 +2638,38 @@
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
     <div>
         <p>
-            
+
         </p>
     </div>
 </details>
 
 ### Q. for문을 안쓰고 1-100까지 더하기
-<details>
-    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
-    <div>
-        <p>
-            
-        </p>
-    </div>
-</details>
+```java
+package algorithm;
+
+public class Test {
+
+    private int sum(int n) {
+        if (n == 100) {
+          return n;
+        }
+        return n + sum(n + 1);
+    }
+
+    private int sum2(int n) {
+        if (n == 1) {
+          return 1;
+        }
+        return n + sum2(n - 1);
+    }
+
+    public static void main(String[] args) {
+        Test test = new Test();
+        System.out.println(test5.sum(1));
+        System.out.println(test5.sum2(100));
+    }
+}
+```
 
 ### Q. *, / 연산자 없이 곱하기, 나누기 연산 수행하기
 <details>
