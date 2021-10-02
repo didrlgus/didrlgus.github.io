@@ -278,6 +278,19 @@
     </div>
 </details>
 
+### Q. 트랜잭션 내에서 발생한 checked exception은 왜 롤백을 안할까요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            기본적으로 Checked Exception는 복구가 가능하다는 메커니즘을 가지고 있습니다.
+            예를들어, CDN 서버에서 프로필 이미지를 가져와야 하는 로직이 있다고 가정하겠습니다.
+            그런데, CDN 서버의 통신 장애로 인해 프로필 이미지를 가져오지 못해 I/O Exception이 발생한다면, 이를 사용자에게 전달하는 것이 아니라 예외를 잡아 default image를 사용자에게 전달하는 방식으로 예외를 복구할 수 있습니다.
+            즉, 이렇게 개발자가 이미 복구 작업을 진행했을 수 있으니까, 따로 rollback은 진행하지 않는다고 생각할 수 있습니다.
+        </p>
+    </div>
+</details>
+
 ### Q. 자바의 final은 무엇인가요?
 <details>
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
