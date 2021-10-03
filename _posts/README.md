@@ -999,6 +999,18 @@
     </div>
 </details>
 
+### Q. 스프링 부트 스타터에 대해서 설명해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            개발에 필요한 연관된 의존성들을 모아 제공하며 각 의존성마다 필요한 기본 설정들까지 자동화 해주는 기능입니다.
+            예를들어, spring-boot-start-web 의존성을 애플리케이션에 추가하면  web과 연관된 의존성들을 모두 패키징해서 제공하고, tomcat에 대한 default 설정들까지 자동으로 추가 해줍니다.
+            즉, 스타터는 개발자가 더욱 더 비즈니스 로직에 집중할 수 있도록 도와주는 스프링 부트에서 제공하는 기능입니다.
+        </p>
+    </div>
+</details>
+
 ### Q. threadLocal이 무엇인가요?
 <details>
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
