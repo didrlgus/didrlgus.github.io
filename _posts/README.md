@@ -98,6 +98,34 @@
     </div>
 </details>
 
+### Q. GC의 종류와 각각의 특징에 대해 설명해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            Serial GC는 가장 단순한 방식의 GC로 싱글 스레드로 GC를 동작시킵니다.
+            싱글 스레드로 동작하여 느리고, 그만큼 STW 시간이 다른 GC에 비해 깁니다.
+            Mark & Sweep & Compact 알고리즘을 사용합니다.
+            보통 실무에서 사용하는 경우는 없습니다.
+            Parallel GC는 GC 작업을 여러 스레드로 병렬처리하여, STW 시간을 최소화 시키기 위한 GC 입니다.
+            young gen에 대한 minor GC를  병렬처리 합니다.
+            Parallel Old GC라는 것도 있는데, 해당 GC는 old gen에서 수행되는 major GC도 병렬처리 합니다.
+            Parallel GC는 자바 8의 디폴트 GC 입니다.
+            CMS GC(Concurrent Mark Sweep GC)는 STW로 인해 Java Application이 멈추는 현상을 줄이고자 만든 GC입니다.
+            reachable한 객체를 한번에 찾지 않고 4단계로 나눠서 찾는 방식을 사용합니다.
+            Initial Mark는 GC Root가 참조하는 객체만 마킹합니다. 이 과정에서 stop-the-world 발생합니다.
+            Concurrent Mark는 참조하는 객체를 따라가며, 지속적으로 마킹합니다. stop-the-world 없이 이루어집니다.
+            Remark는 concurrent mark 과정에서 변경된 사항이 없는지 다시 한번 마킹하며 확정하는 과정입니다. stop-the-world가 발생합니다.
+            Concurrent Sweep는 unrechable한 객체를 제거하는 과정입니다. stop-the-world 없이 이루어집니다.
+            CMS GC는 가비지 수거 후 compaction을 수행하지 않습니다.
+            G1GC는 Garbage first Garbage Collector 입니다.
+            Eden, Survivor, Old 영역을 고정된 크기로 고정된 위치에 나누는 것이 아니라, 전체 힙 메모리 영역을 리전이라는 일정한 크기로 나눠서 각 리전의 상태에 따라 그 리전의 역할이 동적으로 부여되는 방식으로 동작합니다.
+            전체 힙에 대해서 탐색하지 않고 부분적으로 리젼 단위로 탐색하며, 각각의 리젼에만 GC가 발생해 빠르게 GC를 수행할 수 있습니다.
+            자바 9부터 디폴트 GC 입니다.
+        </p>
+    </div>
+</details>
+
 ### Q. minor-gc 에서 발생하는 stw 와 major-gc, full-gc 에서 발생하는 stw 의 속도는 어떤 차이가 있을까요?
 <details>
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
