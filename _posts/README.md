@@ -610,6 +610,18 @@
     </div>
 </details>
 
+### Q. 자바 스트림을 사용하면서 실제 기본 for 문을 사용했을 때보다 어떤 장점이 있는지 설명해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            데이터를 가공하거나 원하는 데이터를 필터링하는데 용이합니다.
+            데이터를 그루핑하여 집계하기가 용이합니다.
+            병렬처리가 가능합니다.
+        </p>
+    </div>
+</details>
+
 ### Q. 리플렉션에 대해서 설명해주세요.
 <details>
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
