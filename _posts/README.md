@@ -2126,6 +2126,18 @@
     </div>
 </details>
 
+### Q. Connection Timeout과 Read Timeout에 대해서 설명해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            Connection Timeout은 종단 간에 3-way-handshaking을 통해 Connection을 생성 하는데 소요되는 최대 시간을 의미합니다. 이 시간을 넘기게 되면 연결 할 수 없는 것으로 판단하고 에러가 발생 합니다.
+            Read Timeout은 연결된 종단 간에 데이터를 주고 받을 때 소요되는 최대 시간을 의미 합니다. 이 시간을 넘기게 되면 데이터를 받을 수 없는 것으로 판단하고 에러가 발생 합니다.
+            이로 인해 클라이언트와 서버 간 싱크가 맞지 않아 문제가 발생할 확률이 높습니다.
+        </p>
+    </div>
+</details>
+
 # 보안
 ### 대칭키와 공개키,개인키가 무엇인가요?
 <details>
