@@ -376,6 +376,17 @@
     </div>
 </details>
 
+### Q. String에는 얼마나 많은 문자를 넣을 수 있을까요?
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            Java의 String 객체는 char 형의 배열로 나타내며, heap memory 상에 저장됩니다.
+            즉, String 객체의 길이는 heap memory의 크기에 따라 결정되며, JVM 내에 할당된 힙 memory 크기를 넘을 수 없습니다.
+        </p>
+    </div>
+</details>
+
 ### Q. String, StringBuffer, StringBuilder의 차이점에 대해서 말해주세요.
 <details>
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
