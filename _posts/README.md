@@ -703,6 +703,19 @@
     </div>
 </details>
 
+### Q. auto boxing과 unboxing 에 대해서 설명해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+          auto boxing이란 기본 타입의 데이터를 래퍼 클래스의 객체로 변환하는 것을 말합니다.
+          Integer a = 100; 수행 시, auto boxing이 일어나면서 new Integer(100)을 알아서 수행시킵니다.
+          unboxing은, 래퍼 타입의 객체를 기본 값으로 변환하는 것을 말합니다.
+          래퍼클래스인 Integer 타입의 값을 primitivie 타입인 int 변수에 할당하면 Integer가 int로 알아서 unboxing되어 값이 할당됩니다.
+        </p>
+    </div>
+</details>
+
 ### Q. System.out.println()를 절대 쓰지 말라고 하는데 이유가 무엇일까요?
 <details>
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
