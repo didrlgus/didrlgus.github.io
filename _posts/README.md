@@ -757,6 +757,17 @@
     </div>
 </details>
 
+### Q. Optional에서 orElse와 orElseGet의 차이에 대해 설명해주세요.
+<details>
+    <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
+    <div>
+        <p>
+            orElse의 파라미터는 일반 객체이며, 메서드를 파라미터로 전달할 시, Optional로 감싼 값이 null 이던 말던 항상 호출됩니다.
+            반면 orElseGet 메서드의 파라미터는 Supplier 이며 Optional로 감싼 객체가 null이 아니면 호출되지 않고, null이면 호출됩니다.
+        </p>
+    </div>
+</details>
+
 ### Q. ConcurrentModificationException 을 설명해주세요.
 <details>
     <summary style="font-Weight : bold; font-size : 50px; color : #E43914;">답변</summary>
